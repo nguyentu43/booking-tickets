@@ -1,10 +1,7 @@
 ﻿using AutoMapper;
-using BookingTickets.Models.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using BookingTickets.Models;
+using BookingTickets.Models.ViewModels;
+using System.Linq;
 
 namespace BookingTickets.Mapper
 {

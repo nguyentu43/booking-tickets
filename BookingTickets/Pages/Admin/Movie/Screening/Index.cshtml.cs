@@ -1,12 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using BookingTickets.Data.Base;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using Models = BookingTickets.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace BookingTickets.Pages.Admin.Movie.Screening
 {
@@ -17,7 +16,7 @@ namespace BookingTickets.Pages.Admin.Movie.Screening
             _unitOfWork = unitOfWork;
         }
         private IUnitOfWork _unitOfWork { get; }
-        public List<IGrouping<int,Models.Screening>> ScreeningGroups { get; set; }
+        public List<IGrouping<int, Models.Screening>> ScreeningGroups { get; set; }
         public async Task OnGetAsync(int movieId)
         {
             var screenings = await _unitOfWork.ScreeningRepository.DbSet
@@ -36,7 +35,7 @@ namespace BookingTickets.Pages.Admin.Movie.Screening
         public async Task<IActionResult> OnPostDeleteAsync(int id)
         {
             var screening = await _unitOfWork.ScreeningRepository.DbSet.SingleOrDefaultAsync(sc => sc.Id == id);
-            if(screening != null)
+            if (screening != null)
             {
                 _unitOfWork.ScreeningRepository.Remove(screening);
                 await _unitOfWork.SaveChangeAsync();
@@ -46,7 +45,7 @@ namespace BookingTickets.Pages.Admin.Movie.Screening
             {
                 throw new Exception("Screening not found");
             }
-            
+
             return RedirectToPage();
         }
     }

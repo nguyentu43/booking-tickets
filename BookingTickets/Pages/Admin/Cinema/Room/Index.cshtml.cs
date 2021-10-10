@@ -1,13 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using BookingTickets.Data.Base;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using Models = BookingTickets.Models;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace BookingTickets.Pages.Admin.Cinema.Room
 {
@@ -27,7 +24,7 @@ namespace BookingTickets.Pages.Admin.Cinema.Room
         public async Task<IActionResult> OnPostDeleteAsync(int id)
         {
             var deleteRoom = await _unitOfWork.RoomRepository.DbSet.SingleOrDefaultAsync(g => g.Id == id);
-            if(deleteRoom != null)
+            if (deleteRoom != null)
             {
                 _unitOfWork.RoomRepository.Remove(deleteRoom);
                 await _unitOfWork.SaveChangeAsync();

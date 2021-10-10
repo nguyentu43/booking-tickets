@@ -1,14 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AutoMapper;
 using BookingTickets.Data.Base;
 using BookingTickets.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using Models = BookingTickets.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace BookingTickets.Pages.Admin.Cinema.Room
 {
@@ -46,11 +45,11 @@ namespace BookingTickets.Pages.Admin.Cinema.Room
                 {
                     _unitOfWork.RoomRepository.Add(room);
                     await _unitOfWork.SaveChangeAsync();
-                    for (int row=0; row<7; row++)
+                    for (int row = 0; row < 7; row++)
                     {
-                        for(int col=0;col<9; col++)
+                        for (int col = 0; col < 9; col++)
                         {
-                            if(row > 3)
+                            if (row > 3)
                             {
                                 _unitOfWork.SeatRepository.Add(new Models.Seat { Row = row, Column = col, RoomId = room.Id, SeatType = Constants.SeatType.VIP });
                             }

@@ -1,14 +1,11 @@
-﻿using BookingTickets.Models;
+﻿using BookingTickets.Constants;
+using BookingTickets.Filters;
+using BookingTickets.Models;
 using BookingTickets.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using BookingTickets.Filters;
-using BookingTickets.Constants;
-using Microsoft.AspNetCore.Authorization;
 
 namespace BookingTickets.Controllers
 {
@@ -37,7 +34,7 @@ namespace BookingTickets.Controllers
                 var result = await _signInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, false);
                 if (result.Succeeded)
                 {
-                    if(model.ReturnUrl != null)
+                    if (model.ReturnUrl != null)
                     {
                         return Redirect(model.ReturnUrl);
                     }
@@ -71,7 +68,7 @@ namespace BookingTickets.Controllers
                 var createdResult = await _signInManager.UserManager.CreateAsync(user, model.Password);
                 if (!createdResult.Succeeded)
                 {
-                    foreach(var error in createdResult.Errors)
+                    foreach (var error in createdResult.Errors)
                     {
                         ModelState.AddModelError("", error.Description);
                     }

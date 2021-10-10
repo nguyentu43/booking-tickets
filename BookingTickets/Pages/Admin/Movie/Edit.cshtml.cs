@@ -1,17 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AutoMapper;
 using BookingTickets.Data.Base;
+using BookingTickets.Helper;
 using BookingTickets.Models.ViewModels;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using Models = BookingTickets.Models;
-using BookingTickets.Helper;
+using System.Collections.Generic;
 using System.IO;
-using Microsoft.AspNetCore.Hosting;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace BookingTickets.Pages.Admin.Movie
 {
@@ -52,7 +50,7 @@ namespace BookingTickets.Pages.Admin.Movie
                         movie.Cover = await SaveCoverFile();
                         await _unitOfWork.SaveChangeAsync();
 
-                        foreach(var g in Movie.Genres)
+                        foreach (var g in Movie.Genres)
                         {
                             _unitOfWork.MovieGenreRepository.Add(new Models.MovieGenre { GenreId = g, MovieId = movie.Id });
                         }

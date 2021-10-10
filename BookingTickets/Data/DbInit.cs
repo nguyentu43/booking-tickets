@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
-using BookingTickets.Constants;
+﻿using BookingTickets.Constants;
 using BookingTickets.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
 
 namespace BookingTickets.Data
 {
@@ -14,7 +12,7 @@ namespace BookingTickets.Data
         private ApplicationDbContext _dbContext;
         private UserManager<ApplicationUser> _userManager;
         private RoleManager<IdentityRole> _roleManager;
-       
+
         public DbInit(ApplicationDbContext dbContext, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             _dbContext = dbContext;
@@ -23,7 +21,7 @@ namespace BookingTickets.Data
         }
         public void GenerateInitData()
         {
-            if(_dbContext.Database.GetPendingMigrations().Count() > 0)
+            if (_dbContext.Database.GetPendingMigrations().Count() > 0)
             {
                 _dbContext.Database.Migrate();
             }

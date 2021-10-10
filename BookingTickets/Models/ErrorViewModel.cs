@@ -1,5 +1,3 @@
-using System;
-
 namespace BookingTickets.Models
 {
     public class ErrorViewModel

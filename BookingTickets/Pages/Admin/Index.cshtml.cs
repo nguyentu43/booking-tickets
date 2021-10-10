@@ -1,19 +1,16 @@
+using BookingTickets.Data.Base;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
 using System.Linq;
-using System.Threading.Tasks;
-using BookingTickets.Data.Base;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.ComponentModel.DataAnnotations;
 
 namespace BookingTickets.Pages.Admin
 {
     public class IndexModel : PageModel
     {
         private readonly IUnitOfWork unitOfWork;
-        public DateTime StartDate { get; set; } 
+        public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public List<List<dynamic>> Reports { get; set; }
         public IndexModel(IUnitOfWork unitOfWork)
@@ -37,7 +34,7 @@ namespace BookingTickets.Pages.Admin
             var header = new List<dynamic>();
             header.AddRange(new string[] { "Month/Year", "Revenue" });
             Reports.Add(header);
-            foreach(var group in groups)
+            foreach (var group in groups)
             {
                 var row = new List<dynamic>();
                 row.Add(group.Key.Month + "/" + group.Key.Year);

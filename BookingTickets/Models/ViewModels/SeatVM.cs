@@ -1,9 +1,5 @@
 ﻿using BookingTickets.Constants;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace BookingTickets.Models.ViewModels
 {
@@ -16,7 +12,7 @@ namespace BookingTickets.Models.ViewModels
         [Required]
         public int Column { get; set; }
         [Required]
-        public SeatType SeatType { get;set; }
+        public SeatType SeatType { get; set; }
         [Required]
         public int RoomId { get; set; }
     }

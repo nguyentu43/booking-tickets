@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace BookingTickets.Models.ViewModels
 {
@@ -24,7 +22,7 @@ namespace BookingTickets.Models.ViewModels
         [Required]
         public string Rated { get; set; }
         public string Cover { get; set; }
-        [Display(Name ="Cover File")]
+        [Display(Name = "Cover File")]
         public IFormFile CoverFile { get; set; }
         public DateTime ReleaseDate { get; set; }
         public List<int> Genres { get; set; } = new List<int>();

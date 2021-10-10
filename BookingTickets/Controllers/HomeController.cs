@@ -5,7 +5,6 @@ using LinqKit;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -29,11 +28,11 @@ namespace BookingTickets.Controllers
         public async Task<IActionResult> Index(SearchFormVM form)
         {
             var whereBuilder = PredicateBuilder.New<Movie>(true);
-            if(form.Keyword != null && form.Keyword != "")
+            if (form.Keyword != null && form.Keyword != "")
             {
                 whereBuilder = whereBuilder.And(m => m.Title.ToLower().Contains(form.Keyword.ToLower()));
             }
-            if(form.SelectedGenre > 0)
+            if (form.SelectedGenre > 0)
             {
                 whereBuilder = whereBuilder.And(m => m.Genres.Any(g => g.Id == form.SelectedGenre));
             }
@@ -47,7 +46,7 @@ namespace BookingTickets.Controllers
                 .ToListAsync();
             var moviesTotal = await _unitOfWork.MovieRepository.DbSet.Where(whereBuilder).CountAsync();
             form.PageTotal = (int)moviesTotal / form.PageSize;
-            if(moviesTotal % form.PageSize != 0)
+            if (moviesTotal % form.PageSize != 0)
             {
                 form.PageTotal++;
             }
@@ -66,13 +65,13 @@ namespace BookingTickets.Controllers
         {
             var movie = await _unitOfWork.MovieRepository.GetById(id);
             var rooms = await _unitOfWork.RoomRepository.GetAllWithCinema().ToListAsync();
-            return View(new MovieDetailVM {  Movie = movie, Rooms = rooms });
+            return View(new MovieDetailVM { Movie = movie, Rooms = rooms });
         }
 
         public async Task<IActionResult> MyReservations(string phone)
         {
             List<int> reservations = null;
-            if(!User.Identity.IsAuthenticated)
+            if (!User.Identity.IsAuthenticated)
             {
                 reservations = await _unitOfWork.ReservationRepository.DbSet.Where(r => r.Phone == phone).Select(r => r.Id).ToListAsync();
             }
@@ -89,7 +88,7 @@ namespace BookingTickets.Controllers
         {
             var screeningDateObj = DateTime.Parse(screeningDate);
             var screenings = await _unitOfWork.ScreeningRepository.DbSet
-                .Where(sc => sc.RoomId == roomId && sc.MovieId == movieId 
+                .Where(sc => sc.RoomId == roomId && sc.MovieId == movieId
                              && sc.ScreeningStart >= DateTime.Now
                              && sc.ScreeningStart.Date == screeningDateObj.Date
                 )
@@ -127,22 +126,23 @@ namespace BookingTickets.Controllers
         }
 
         [HttpPost("/ajax/booking")]
-        public async Task<IActionResult> BookingTicket([FromBody]ReservationFormVM form)
+        public async Task<IActionResult> BookingTicket([FromBody] ReservationFormVM form)
         {
             var screening = await _unitOfWork.ScreeningRepository.DbSet.Where(sc => sc.Id == form.ScreeningId).SingleOrDefaultAsync();
             var seats = await _unitOfWork.SeatRepository.DbSet.Where(s => form.Seats.Contains(s.Id)).ToListAsync();
-           
-            if(screening.ScreeningStart < DateTime.Now)
+
+            if (screening.ScreeningStart < DateTime.Now)
             {
                 return Ok(new { error = "Screening has been end" });
             }
 
-            if(seats.Count != form.Seats.Count)
+            if (seats.Count != form.Seats.Count)
             {
                 return Ok(new { error = "Seats not found" });
             }
 
-            var reservation = new Reservation { 
+            var reservation = new Reservation
+            {
                 Name = form.Name,
                 Email = form.Email,
                 Phone = form.Phone,
@@ -150,7 +150,7 @@ namespace BookingTickets.Controllers
                 ReservationDate = DateTime.Now,
             };
 
-            if(User.Identity?.Name != null)
+            if (User.Identity?.Name != null)
             {
                 var user = await _userManager.FindByNameAsync(User.Identity?.Name);
                 reservation.CustomerId = user.Id;
@@ -158,17 +158,17 @@ namespace BookingTickets.Controllers
 
             var total = 0d;
             var reservationSeats = new List<ReservationSeat>();
-            foreach(var seat in seats)
+            foreach (var seat in seats)
             {
                 var rs = new ReservationSeat();
                 rs.SeatId = seat.Id;
                 rs.SeatName = seat.SeatType.ToString() + "-" + Convert.ToChar(seat.Row + 65).ToString() + seat.Column;
-                if(seat.SeatType == Constants.SeatType.VIP)
+                if (seat.SeatType == Constants.SeatType.VIP)
                 {
                     total += screening.Price * 1.1d;
                     rs.Price = screening.Price * 1.1d;
                 }
-                else if(seat.SeatType == Constants.SeatType.NORMAL)
+                else if (seat.SeatType == Constants.SeatType.NORMAL)
                 {
                     total += screening.Price;
                     rs.Price = screening.Price;
@@ -182,7 +182,7 @@ namespace BookingTickets.Controllers
                 _unitOfWork.ReservationRepository.Add(reservation);
                 await _unitOfWork.SaveChangeAsync();
 
-                foreach(var rs in reservationSeats)
+                foreach (var rs in reservationSeats)
                 {
                     rs.ReservationId = reservation.Id;
                     _unitOfWork.ReservationSeatRepository.Add(rs);
@@ -190,7 +190,7 @@ namespace BookingTickets.Controllers
 
                 await _unitOfWork.SaveChangeAsync();
             }
-            catch(Exception)
+            catch (Exception)
             {
                 return Ok(new { error = "Booking ticket has errors" });
             }

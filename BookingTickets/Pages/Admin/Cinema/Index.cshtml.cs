@@ -1,17 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using BookingTickets.Data.Base;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using Models = BookingTickets.Models;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace BookingTickets.Pages.Admin.Cinema
 {
-   
+
     public class IndexModel : PageModel
     {
         public IndexModel(IUnitOfWork unitOfWork)
@@ -28,7 +24,7 @@ namespace BookingTickets.Pages.Admin.Cinema
         public async Task<IActionResult> OnPostDeleteAsync(int id)
         {
             var deleteCinema = await _unitOfWork.CinemaRepository.DbSet.SingleOrDefaultAsync(g => g.Id == id);
-            if(deleteCinema != null)
+            if (deleteCinema != null)
             {
                 _unitOfWork.CinemaRepository.Remove(deleteCinema);
                 await _unitOfWork.SaveChangeAsync();

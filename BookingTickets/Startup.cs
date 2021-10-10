@@ -1,20 +1,17 @@
+using AutoMapper;
+using BookingTickets.Constants;
+using BookingTickets.Data;
+using BookingTickets.Data.Base;
+using BookingTickets.Mapper;
+using BookingTickets.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using BookingTickets.Data;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
-using BookingTickets.Models;
-using BookingTickets.Data.Base;
-using AutoMapper;
-using BookingTickets.Constants;
-using BookingTickets.Mapper;
 
 namespace BookingTickets
 {
@@ -85,7 +82,7 @@ namespace BookingTickets
             app.UseStaticFiles();
 
             app.UseRouting();
-            
+
             app.UseAuthentication();
 
             app.UseAuthorization();

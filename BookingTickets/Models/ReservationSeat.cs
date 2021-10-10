@@ -1,9 +1,4 @@
-﻿using BookingTickets.Constants;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace BookingTickets.Models
 {
@@ -16,6 +11,6 @@ namespace BookingTickets.Models
         [Required]
         public double Price { get; set; } = 0;
         [Required]
-        public string SeatName {get;set;}
+        public string SeatName { get; set; }
     }
 }

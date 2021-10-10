@@ -1,15 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
+﻿using BookingTickets.Data.Base;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
-using BookingTickets.Data.Base;
 using ViewModels = BookingTickets.Models.ViewModels;
-using Microsoft.EntityFrameworkCore;
 
 namespace BookingTickets.Components
 {
-    public class DetailsReservation: ViewComponent
+    public class DetailsReservation : ViewComponent
     {
         private readonly IUnitOfWork _unitOfWork;
         public DetailsReservation(IUnitOfWork unitOfWork)
@@ -26,7 +24,8 @@ namespace BookingTickets.Components
                 .DbSet.Where(rs => rs.ReservationId == reservation.Id)
                 .Include(rs => rs.Seat)
                 .ThenInclude(s => s.Room).ThenInclude(r => r.Cinema).ToListAsync();
-            return View(new ViewModels.DetailsReservation { 
+            return View(new ViewModels.DetailsReservation
+            {
                 Reservation = reservation,
                 ReservationSeats = reservationSeats
             });

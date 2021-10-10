@@ -1,13 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AutoMapper;
 using BookingTickets.Data.Base;
 using BookingTickets.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace BookingTickets.Pages.Admin.Cinema
 {
@@ -28,7 +25,7 @@ namespace BookingTickets.Pages.Admin.Cinema
         }
         public async Task<IActionResult> OnPostAsync(int? id = null)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 var editCinema = await _unitOfWork.CinemaRepository.DbSet.AsNoTracking().SingleOrDefaultAsync(g => g.Id == id);
                 var cinema = _mapper.Map<CinemaVM, Models.Cinema>(Cinema);
