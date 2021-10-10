@@ -19,3 +19,7 @@
 {
     @await Component.InvokeAsync("DetailsReservation", new { id = id });
 }
+
+@if(Model.Count == 0) { 
+    <h5>Reservation is empty</h5>
+}
