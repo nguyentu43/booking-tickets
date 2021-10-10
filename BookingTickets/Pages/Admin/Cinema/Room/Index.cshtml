@@ -5,7 +5,7 @@
     ViewContext.HttpContext.Items["Title"] = "Room";
 }
 <div class="table-responsive">
-    <a class="btn btn-primary mb-3" href="/Admin/Cinema/@RouteData.Values["CinemaId"]/Room/Edit">Add</a>
+    <a class="btn btn-primary mb-3" href="~/Admin/Cinema/@RouteData.Values["CinemaId"]/Room/Edit">Add</a>
     <form method="post">
         <table class="table table-bordered">
             <thead>
@@ -23,7 +23,7 @@
                         <td>@r.Name</td>
                         <td>
                             <div class="btn-group btn-group-sm">
-                                <a href="/Admin/Cinema/@r.CinemaId/Room/Edit/@r.Id" class="btn btn-success">Edit</a>
+                                <a href="~/Admin/Cinema/@r.CinemaId/Room/Edit/@r.Id" class="btn btn-success">Edit</a>
                                 <button asp-page-handler="Delete" class="btn btn-danger btnDelete" asp-route-id="@r.Id">Delete</button>
                             </div>
                             

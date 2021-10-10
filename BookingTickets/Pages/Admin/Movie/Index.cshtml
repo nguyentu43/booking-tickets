@@ -32,7 +32,7 @@
                         <td>
                             <div class="btn-group btn-group-sm">
                                 <a asp-page="./Edit" asp-route-id="@movie.Id" class="btn btn-success">Edit</a>
-                                <a href="/Admin/Movie/@movie.Id/Screening" class="btn btn-info">Manage Screening</a>
+                                <a href="~/Admin/Movie/@movie.Id/Screening" class="btn btn-info">Manage Screening</a>
                                 <button asp-page-handler="Delete" class="btn btn-danger btnDelete" asp-route-id="@movie.Id">Delete</button>
                             </div>
                             

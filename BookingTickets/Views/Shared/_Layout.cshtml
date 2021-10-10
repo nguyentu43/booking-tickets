@@ -53,7 +53,7 @@
                                 if (await UserManager.IsInRoleAsync(user, BookingTickets.Constants.Role.Admin.ToString()))
                                 {
                                     <li class="nav-item">
-                                        <a class="nav-link text-dark" href="/Admin">Manage</a>
+                                        <a class="nav-link text-dark" href="~/Admin">Manage</a>
                                     </li>
                                 }
                             }
@@ -96,7 +96,7 @@
                             <a href="/Admin" class="list-group-item list-group-item-action @(path == "/admin" ? "active" : "")">Statistics</a>
                             @foreach (var name in pages)
                             {
-                                <a href="/Admin/@name"
+                                <a href="~/Admin/@name"
                                    class="list-group-item list-group-item-action @(path.Contains(name.ToLower()) ? "active" : "")">@name</a>
                             }
                         </div>

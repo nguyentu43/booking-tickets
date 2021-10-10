@@ -5,7 +5,7 @@
     ViewContext.HttpContext.Items["Title"] = "Screening";
 }
 
-<a class="btn btn-primary mb-3" href="/Admin/Movie/@RouteData.Values["MovieId"]/Screening/Edit">Add</a>
+<a class="btn btn-primary mb-3" href="~/Admin/Movie/@RouteData.Values["MovieId"]/Screening/Edit">Add</a>
 <form method="post">
     <div class="table-responsive">
         <table class="table table-bordered">
@@ -35,7 +35,7 @@
                 <td>@screening.Price.ToString("C")</td>
                 <td>
                     <div class="btn-group btn-group-sm">
-                        <a href="/Admin/Movie/@RouteData.Values["MovieId"]/Screening/Edit/@screening.Id" class="btn btn-success">Edit</a>
+                        <a href="~/Admin/Movie/@RouteData.Values["MovieId"]/Screening/Edit/@screening.Id" class="btn btn-success">Edit</a>
                         <button asp-page-handler="Delete" class="btn btn-danger btnDelete" asp-route-id="@screening.Id">Delete</button>
                     </div>
                     

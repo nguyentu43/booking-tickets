@@ -27,7 +27,7 @@
                     <td>
                         <div class="btn-group btn-group-sm">
                             <a asp-page="Edit" asp-route-id="@c.Id" class="btn btn-success">Edit</a>
-                            <a href="/Admin/Cinema/@c.Id/Room" class="btn btn-info">Manage Room</a>
+                            <a href="~/Admin/Cinema/@c.Id/Room" class="btn btn-info">Manage Room</a>
                             <button asp-page-handler="Delete" class="btn btn-danger btnDelete" asp-route-id="@c.Id">Delete</button>
                         </div>
                         

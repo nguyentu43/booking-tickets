@@ -6,7 +6,7 @@
     ViewContext.HttpContext.Items["Title"] = "Edit Room";
 }
 
-<a href="/Admin/Cinema/@RouteData.Values["CinemaId"]/Room" class="btn btn-primary mb-3">Manage Room</a>
+<a href="~/Admin/Cinema/@RouteData.Values["CinemaId"]/Room" class="btn btn-primary mb-3">Manage Room</a>
 <div class="card">
     <div class="card-header">
         @(Model.Room == null ? "Create" : "Edit") Room

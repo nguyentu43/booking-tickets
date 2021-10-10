@@ -20,7 +20,7 @@
     {
         <div class="col-12 mt-3 mt-md-0 col-md-6">
             <div class="d-flex border p-3 rounded movie">
-                <img width="120" class="rounded" src="/cover/@movie.Cover" />
+                <img width="120" class="rounded" src="~/cover/@movie.Cover" />
                 <div class="ml-3 movie__info">
                     <div class="h4"><a asp-controller="Home" asp-action="MovieDetails" asp-route-id="@movie.Id">@movie.Title</a></div>
                     <div>Genres: @string.Join(", ", movie.Genres.Select(g => g.Name))</div>
