@@ -1,0 +1,86 @@
+﻿@page
+@inject BookingTickets.Data.Base.IUnitOfWork UnitOfWork
+@model BookingTickets.Pages.Admin.IndexModel
+@{
+    Layout = "_IndexAdminLayout";
+    ViewContext.HttpContext.Items["Title"] = "Statistics";
+}
+
+<div class="container">
+    <div class="row text-white">
+        <div class="col-12 mt-3 mt-md-0 col-md-4">
+            <div class="p-2 rounded bg-primary">
+                <h4>Movies</h4>
+                <h1>@UnitOfWork.MovieRepository.DbSet.Count() </h1>
+            </div>
+        </div>
+        <div class="col-12 mt-3 mt-md-0 col-md-4">
+            <div class="p-2 rounded bg-success">
+                <h4>Reservations</h4>
+                <h1>@UnitOfWork.ReservationRepository.DbSet.Count()</h1>
+            </div>
+        </div>
+        <div class="col-12 mt-3 mt-md-0 col-md-4">
+            <div class="p-2 rounded bg-warning">
+                <h4>Cinemas</h4>
+                <h1>@UnitOfWork.CinemaRepository.DbSet.Count()</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-3">
+    <h4>Chart For Revenue</h4>
+    <form method="get">
+        <div class="form-group">
+            <label>Start Date</label>
+            <input class="form-control" value="@Model.StartDate.ToString("MM/dd/yyyy")" name="StartDate" required />
+        </div>
+        <div class="form-group">
+            <label>End Date</label>
+            <input class="form-control" value="@Model.EndDate.ToString("MM/dd/yyyy")" name="EndDate" required />
+        </div>
+        
+        <button class="btn btn-primary mb-3" type="submit">Submit</button>
+    </form>
+    <div id="curve-chart"></div>
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    @foreach (var title in Model.Reports[0])
+                    {
+                        <th>@title</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @{ var total = 0d; }
+                @for(var i = 1; i < Model.Reports.Count; ++i)
+                {
+                    <tr>
+                        @for(var j = 0; j < 2; ++j)
+                        {
+                            <td>@Model.Reports[i][j]</td>                    
+                            {
+                                if (j == 1) total += Model.Reports[i][j];
+                            }
+                        }
+                    </tr>
+                }
+                @if(Model.Reports.Count > 1)
+                {
+                    <tr>
+                        <th>Total</th>
+                        <th>@total</th>
+                    </tr>
+                }
+                
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    let chartData = @Html.Raw(Json.Serialize(Model.Reports));
+</script>

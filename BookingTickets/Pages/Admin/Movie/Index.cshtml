@@ -1,0 +1,47 @@
+﻿@page
+@model BookingTickets.Pages.Admin.Movie.IndexModel
+@{
+    Layout = "_IndexAdminLayout";
+    ViewContext.HttpContext.Items["Title"] = "Movie";
+
+}
+
+<a class="btn btn-primary mb-3" asp-page="Edit">Add</a>
+<form method="post">
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Cover</th>
+                    <th scope="col">ReleaseDate</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var movie in Model.Movies)
+                {
+                    <tr>
+                        <td>@movie.Id</td>
+                        <td>@movie.Title</td>
+                        <td>
+                            <img class="img-thumbnail" width="150" src="~/cover/@movie.Cover" alt="@movie.Title Cover" />
+                        </td>
+                        <td>@movie.ReleaseDate.ToShortDateString()</td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <a asp-page="./Edit" asp-route-id="@movie.Id" class="btn btn-success">Edit</a>
+                                <a href="/Admin/Movie/@movie.Id/Screening" class="btn btn-info">Manage Screening</a>
+                                <button asp-page-handler="Delete" class="btn btn-danger btnDelete" asp-route-id="@movie.Id">Delete</button>
+                            </div>
+                            
+                        </td>
+                    </tr>
+
+                }
+
+            </tbody>
+        </table>
+    </div>
+</form>

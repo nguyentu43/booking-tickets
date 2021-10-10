@@ -1,0 +1,43 @@
+﻿@model RegisterVM
+
+@{
+    ViewContext.HttpContext.Items["Title"] = "Register";
+}
+
+<div class="col-12 col-sm-8 offset-sm-2">
+    <div class="card">
+        <div class="card-header">
+            Register
+        </div>
+        <div class="card-body">
+            <form asp-action="Register">
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="UserName"></label>
+                    <input asp-for="UserName" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="Email"></label>
+                    <input asp-for="Email" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="Name"></label>
+                    <input asp-for="Name" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="Password"></label>
+                    <input asp-for="Password" class="form-control" type="password" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="ConfirmPassword"></label>
+                    <input asp-for="ConfirmPassword" class="form-control" type="password" />
+                </div>
+                <button class="btn btn-success mt-2" type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}

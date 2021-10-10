@@ -1,0 +1,23 @@
+﻿@page "{id?}"
+@model BookingTickets.Pages.Admin.Genre.EditModel
+
+@{
+    ViewContext.HttpContext.Items["Title"] = "Edit Genre";
+}
+
+
+<div class="card">
+    <div class="card-header">
+        @(Model.Genre == null ? "Create" : "Edit") Genre
+    </div>
+    <div class="card-body">
+        <form method="post">
+            <div class="text-danger" asp-validation-summary="All"></div>
+            <div class="form-group">
+                <label asp-for="Genre.Name"></label>
+                <input class="form-control" asp-for="Genre.Name" />
+            </div>
+            <button class="btn btn-success" type="submit">Save</button>
+        </form>
+    </div>
+</div>

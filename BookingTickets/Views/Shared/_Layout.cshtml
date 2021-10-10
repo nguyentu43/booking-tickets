@@ -1,0 +1,135 @@
+﻿@inject Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> UserManager
+@inject Microsoft.AspNetCore.Identity.RoleManager<Microsoft.AspNetCore.Identity.IdentityRole> RoleManager
+
+@{ 
+    ApplicationUser user = null;
+    if (User.Identity?.Name != null)
+    {
+        user = await UserManager.FindByNameAsync(User.Identity.Name);
+    }
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewContext.HttpContext.Items["Title"] - BookingTickets</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/summernote/summernote-bs4.min.css"/>
+    <link rel="stylesheet" href="~/lib/jquery-datetimepicker/jquery.datetimepicker.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">BookingTickets</a>
+
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="navbar-collapse collapse justify-content-between">
+                    <ul class="navbar-nav flex-grow-1 ">
+                        <li class="nav-item ml-md-auto">
+                            <a class="nav-link text-dark" asp-controller="Home" asp-action="MyReservations">My Reservations</a>
+                        </li>
+                        @if (user == null)
+                        {
+                            <li class="nav-item">
+                                <a class="btn btn-primary mr-2" asp-controller="Auth" asp-action="Login">Login</a>
+
+                            </li>
+                            <li class="nav-item">
+                                <a class="btn btn-success mt-3 mt-md-0" asp-controller="Auth" asp-action="Register">Register</a>
+                            </li>
+                        }
+                        else
+                        {
+
+                            {
+                                if (await UserManager.IsInRoleAsync(user, BookingTickets.Constants.Role.Admin.ToString()))
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" href="/Admin">Manage</a>
+                                    </li>
+                                }
+                            }
+
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="#">Hello, @user.Name</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="btn btn-danger" asp-controller="Auth" asp-action="Logout">Logout</a>
+                            </li>
+                        }
+
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @if (TempData["message"] != null)
+            {
+                <div class="alert alert-primary text-right mb-3">@TempData["message"]</div>
+            }
+
+            @if (TempData["error_message"] != null)
+            {
+                <div class="alert alert-danger text-right mb-3">@TempData["error_message"]</div>
+            }
+
+            @{
+                var path = ViewContext.HttpContext.Request.Path.Value.ToLower();
+                var pages = new string[] { "Movie", "Genre", "Cinema", "Reservation" };
+            }
+
+            @if (path.StartsWith("/admin"))
+            {
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="list-group">
+                            <a href="/Admin" class="list-group-item list-group-item-action @(path == "/admin" ? "active" : "")">Statistics</a>
+                            @foreach (var name in pages)
+                            {
+                                <a href="/Admin/@name"
+                                   class="list-group-item list-group-item-action @(path.Contains(name.ToLower()) ? "active" : "")">@name</a>
+                            }
+                        </div>
+                    </div>
+                    <div class="col-md-10 mt-3 mt-sm-0">
+                        @RenderBody()
+                    </div>
+                </div>
+
+            }
+            else
+            {
+                @RenderBody()
+            }
+
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2021 - BookingTickets
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/summernote/summernote-bs4.min.js"></script>
+    <script src="~/lib/jquery-datetimepicker/jquery.datetimepicker.full.min.js"></script>
+    <script src="~/lib/jquery.steps/jquery.steps.min.js"></script>
+    <script src="~/lib/moment.js/moment.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+    @if (ViewContext.HttpContext.Request.Path.Value?.ToLower().StartsWith("/admin") == false)
+    {
+        <script src="~/js/site.js" asp-append-version="true"></script>
+    }
+</body>
+</html>

@@ -1,0 +1,8 @@
+﻿@page "{id}"
+@model BookingTickets.Pages.Admin.Reservation.DetailsModel
+@{
+    ViewContext.HttpContext.Items["Title"] = "Details Reservation";
+}
+
+
+@await Component.InvokeAsync("DetailsReservation", new { id = Convert.ToInt32(RouteData.Values["id"]) }) 

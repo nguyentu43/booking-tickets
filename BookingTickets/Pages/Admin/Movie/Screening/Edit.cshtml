@@ -1,0 +1,48 @@
+﻿@page "{id?}"
+@model BookingTickets.Pages.Admin.Movie.Screening.EditModel
+@{
+    ViewContext.HttpContext.Items["Title"] = "Edit Screening";
+}
+
+
+<a href="/Admin/Movie/@RouteData.Values["MovieId"]/Screening" class="btn btn-primary mb-3">Manage Screening</a>
+<div class="card">
+    <div class="card-header">
+        @(Model.Screening == null ? "Create" : "Edit") Screening
+    </div>
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+            <div class="text-danger" asp-validation-summary="All"></div>
+            <div class="form-group">
+                @{
+                    var selectList = new SelectList(Model.Rooms
+                        .Select(r => new { Value = r.Id, Text = r.Name + " - " + r.Cinema.Name, Cinema = r.Cinema }).ToList(),
+                        "Value", "Text", Model.Screening?.RoomId, "Cinema.Name");
+                }
+                <label asp-for="Screening.RoomId"></label>
+                @Html.DropDownListFor(m => m.Screening.RoomId, selectList, "Select a room", new { @class = "form-control" })
+            </div>
+            <div class="form-group">
+                <label asp-for="Screening.Format"></label>
+                <input class="form-control" asp-for="Screening.Format" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Screening.Price"></label>
+                <input class="form-control" type="number" asp-for="Screening.Price" step="0.01" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Screening.ScreeningStart"></label>
+                <input class="form-control" name="Screening.ScreeningStart" value="@Model.Screening?.ScreeningStart.ToString("MM/dd/yyyy HH:mm")" />
+            </div>
+            <button class="btn btn-success" type="submit">Save</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        jQuery().ready(function () {
+            jQuery("[name='Screening.ScreeningStart']").datetimepicker({ format: "m/d/Y H:i" });
+        });
+    </script>
+}

@@ -1,0 +1,49 @@
+﻿@page
+@model BookingTickets.Pages.Admin.Movie.Screening.IndexModel
+@{
+    Layout = "_IndexAdminLayout";
+    ViewContext.HttpContext.Items["Title"] = "Screening";
+}
+
+<a class="btn btn-primary mb-3" href="/Admin/Movie/@RouteData.Values["MovieId"]/Screening/Edit">Add</a>
+<form method="post">
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Room</th>
+                    <th scope="col">Screening Start</th>
+                    <th scope="col">Format</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var group in Model.ScreeningGroups)
+                {
+                    <tr>
+                        <td class="font-weight-bold" colspan="6">Cinema: @group.First().Room.Cinema.Name</td>
+                    </tr>
+                    @foreach (var screening in group)
+                    {
+            <tr>
+                <td>@screening.Id</td>
+                <td>@screening.Room.Name</td>
+                <td>@screening.ScreeningStart.ToString()</td>
+                <td>@screening.Format</td>
+                <td>@screening.Price.ToString("C")</td>
+                <td>
+                    <div class="btn-group btn-group-sm">
+                        <a href="/Admin/Movie/@RouteData.Values["MovieId"]/Screening/Edit/@screening.Id" class="btn btn-success">Edit</a>
+                        <button asp-page-handler="Delete" class="btn btn-danger btnDelete" asp-route-id="@screening.Id">Delete</button>
+                    </div>
+                    
+                </td>
+            </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</form>

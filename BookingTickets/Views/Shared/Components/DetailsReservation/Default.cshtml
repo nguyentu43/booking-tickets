@@ -1,0 +1,39 @@
+﻿@model BookingTickets.Models.ViewModels.DetailsReservation
+
+<div class="border rounded p-3">
+    <h4><span class="badge badge-info">#Id: @Model.Reservation.Id</span></h4>
+    <div class="card">
+        <div class="card-header">
+            Information
+        </div>
+        <div class="card-body">
+            Name: @Model.Reservation.Name<br />
+            Email: @Model.Reservation.Email<br />
+            Phone: @Model.Reservation.Phone<br />
+            Total: @Model.Reservation.Price.ToString("C")<br />
+            Screening Start: @Model.Reservation.Screening.ScreeningStart.ToString("g")<br />
+            Format: @Model.Reservation.Screening.Format<br />
+            Movie: <a asp-controller="Home" asp-action="MovieDetails" asp-route-id="@Model.Reservation.Screening.MovieId">@Model.Reservation.Screening.Movie.Title</a>
+        </div>
+    </div>
+
+    <div class="card mt-3">
+        <div class="card-header">
+            Tickets
+        </div>
+        <div class="card-body">
+            <div class="row">
+                @foreach (var rs in Model.ReservationSeats)
+                {
+                    <div class="col-3">
+                        <div class="rounded text-white p-2 @(rs.SeatName.StartsWith("VIP") ? "bg-success" : "bg-primary")">
+                            @rs.SeatName<br />
+                            @rs.Price.ToString("C")<br />
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+</div>

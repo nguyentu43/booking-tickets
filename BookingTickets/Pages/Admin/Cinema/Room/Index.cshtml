@@ -1,0 +1,36 @@
+﻿@page
+@model BookingTickets.Pages.Admin.Cinema.Room.IndexModel
+@{ 
+    Layout = "_IndexAdminLayout";
+    ViewContext.HttpContext.Items["Title"] = "Room";
+}
+<div class="table-responsive">
+    <a class="btn btn-primary mb-3" href="/Admin/Cinema/@RouteData.Values["CinemaId"]/Room/Edit">Add</a>
+    <form method="post">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var r in Model.Rooms)
+                {
+                    <tr>
+                        <td>@r.Id</td>
+                        <td>@r.Name</td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <a href="/Admin/Cinema/@r.CinemaId/Room/Edit/@r.Id" class="btn btn-success">Edit</a>
+                                <button asp-page-handler="Delete" class="btn btn-danger btnDelete" asp-route-id="@r.Id">Delete</button>
+                            </div>
+                            
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </form>
+</div>

@@ -1,0 +1,54 @@
+﻿@page
+@model BookingTickets.Pages.Admin.Reservation.IndexModel
+@{
+    Layout = "_IndexAdminLayout";
+    ViewContext.HttpContext.Items["Title"] = "Reservation";
+
+}
+
+<form method="post">
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Phone</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Reservation Date</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var reservation in Model.Reservations)
+                {
+                <tr>
+                    <td>@reservation.Id</td>
+                    <td>@reservation.Name</td>
+                    <td>@reservation.Phone</td>
+                    <td>@reservation.Price.ToString("C")</td>
+                    
+                    <td>@reservation.ReservationDate.ToString("g")</td>
+                    <td>
+                        <ul class="pl-0 ml-4">
+                            <li>Movie: @reservation.Screening.Movie.Title</li>
+                            <li>Seats: @reservation.Seats.Count</li>
+                            <li>Room: @reservation.Seats.First().Room.Name</li>
+                            <li> Cinema: @reservation.Seats.First().Room.Cinema.Name</li>
+                            <li>Screening Start: @reservation.Screening.ScreeningStart.ToString("g")</li>
+                        </ul>
+                    </td>
+                    <td>
+                        <div class="btn-group btn-group-sm">
+                            <a asp-page="./Details" asp-route-id="@reservation.Id" class="btn btn-success">Details</a>
+                            <button asp-page-handler="Delete" class="btn btn-danger btnDelete" asp-route-id="@reservation.Id">Delete</button>
+                        </div>
+
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</form>

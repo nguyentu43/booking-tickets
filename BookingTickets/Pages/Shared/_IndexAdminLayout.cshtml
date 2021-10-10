@@ -1,0 +1,12 @@
+﻿@{
+    Layout = "_Layout";
+    ViewContext.HttpContext.Items["Title"] = "Admin";
+}
+
+@RenderBody()
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/lib/google-chart/loader.js"></script>
+    <script src="~/js/admin.js" asp-append-version="true"></script>
+}

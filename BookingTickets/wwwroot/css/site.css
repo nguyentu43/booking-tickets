@@ -1,0 +1,169 @@
+﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
+for details on configuring this project to bundle and minify static web assets. */
+
+a.navbar-brand {
+  white-space: normal;
+  text-align: center;
+  word-break: break-all;
+}
+
+/* Provide sufficient contrast against white background */
+a {
+  color: #0366d6;
+}
+
+.btn-primary {
+  color: #fff;
+  background-color: #1b6ec2;
+  border-color: #1861ac;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+  color: #fff;
+  background-color: #1b6ec2;
+  border-color: #1861ac;
+}
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  font-size: 14px;
+}
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.border-top {
+  border-top: 1px solid #e5e5e5;
+}
+.border-bottom {
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.box-shadow {
+  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+}
+
+button.accept-policy {
+  font-size: 1rem;
+  line-height: inherit;
+}
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 60px;
+}
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  white-space: nowrap;
+  line-height: 60px; /* Vertically center the text there */
+}
+
+
+/* custom */
+
+.movie .movie__info{
+    overflow: hidden;
+    
+}
+
+.movie .movie__info div {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+/* jquery steps */
+.steps ul, .actions ul{
+    display: flex;
+    justify-items: stretch;
+    margin: 0;
+    padding:0;
+}
+.steps ul li, .actions ul li{
+    padding: 10px;
+    list-style-type: none;
+    margin-right: 10px;
+    border-radius: 5px;
+    background: #808080
+
+}
+.steps ul li.current{
+    background: #1861ac;
+    color: white;
+}
+
+.steps ul li.done {
+    background: #638cd7;
+    color: white;
+}
+.actions ul li{
+    background: #0366d6;
+}
+
+.steps ul li:last-child, .actions ul li:last-child {
+    margin-right: 0
+}
+.steps ul li a, .actions ul li a{
+    text-decoration: none;
+    color: white;
+    
+}
+.steps ul li.current a, .steps ul li.done a {
+    color: white
+}
+.steps ul li a .current-info {
+    display: none;
+}
+
+.content{
+    position: relative;
+    margin: 10px 0;
+    border: 1px solid #808080;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.content .title{
+    display: none;
+}
+.content .title.current{
+    display: block;
+}
+.content section{
+    transition: all 0.5s;
+}
+
+/* seat-list */
+#wrapper-seat-list{
+    overflow-y:auto;
+}
+
+#seat-list{
+    min-width:600px;
+}
+
+#seat-list .seat-list__item, #seat-list .seat-list__heading{
+    width: 60px;
+    text-align: center;
+}
+
+#seat-list .seat-list__item.seat-list__item--selected{
+    border: 1px solid black;
+}
+
+/*admin*/
+#seat-table table{
+    min-width: 1200px;
+}

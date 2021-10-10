@@ -1,0 +1,21 @@
+﻿@model List<int>
+
+@{ 
+    ViewContext.HttpContext.Items["Title"] = "My Reservation";
+}
+
+@if (!User.Identity.IsAuthenticated)
+{
+    <form method="get" class="mb-3">
+        <div class="form-group">
+            <label>Phone</label>
+            <input class="form-control" name="Phone" pattern="\d{10,15}" value="@ViewContext.HttpContext.Request.Query["phone"]" required />
+        </div>
+        <button class="btn btn-outline-primary">Search</button>
+    </form>
+}
+
+@foreach (var id in Model)
+{
+    @await Component.InvokeAsync("DetailsReservation", new { id = id });
+}

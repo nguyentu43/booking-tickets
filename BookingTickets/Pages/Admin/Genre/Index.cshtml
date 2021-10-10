@@ -1,0 +1,37 @@
+﻿@page
+@model BookingTickets.Pages.Admin.Genre.IndexModel
+@{ 
+    Layout = "_IndexAdminLayout";
+    ViewContext.HttpContext.Items["Title"] = "Genre";
+
+}
+<div class="table-responsive">
+    <a class="btn btn-primary mb-3" asp-page="./Edit">Add</a>
+    <form method="post">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var genre in Model.Genres)
+                {
+                    <tr>
+                        <td>@genre.Id</td>
+                        <td>@genre.Name</td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <a asp-page="./Edit" asp-route-id="@genre.Id" class="btn btn-success">Edit</a>
+                                <button asp-page-handler="Delete" class="btn btn-danger btnDelete" asp-route-id="@genre.Id">Delete</button>
+                            </div>
+                            
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </form>
+</div>

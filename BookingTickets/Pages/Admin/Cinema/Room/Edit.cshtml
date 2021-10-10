@@ -1,0 +1,81 @@
+﻿@page
+@model BookingTickets.Pages.Admin.Cinema.Room.EditModel
+@using BookingTickets.Constants
+
+@{ 
+    ViewContext.HttpContext.Items["Title"] = "Edit Room";
+}
+
+<a href="/Admin/Cinema/@RouteData.Values["CinemaId"]/Room" class="btn btn-primary mb-3">Manage Room</a>
+<div class="card">
+    <div class="card-header">
+        @(Model.Room == null ? "Create" : "Edit") Room
+    </div>
+    <div class="card-body">
+        <form method="post">
+            <div class="text-danger" asp-validation-summary="All"></div>
+            <div class="form-group">
+                <label asp-for="Room.Name"></label>
+                <input class="form-control" asp-for="Room.Name" />
+            </div>
+        @if (Model.Room != null)
+        {
+            <div class="table-responsive" id="seat-table">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th></th>
+                        @for (var i = 1; i <= Model.SeatGroups[0].Count(); ++i)
+                        {
+                            <th scope="col">@i</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var group in Model.SeatGroups)
+                    {
+                        <tr>
+                            <th>@Convert.ToChar(group.Key + 65)</th>
+                            @{ var orderList = group.OrderBy(s => s.Column).ToList();}
+                            @foreach (var seat in orderList)
+                            {
+                        <td>
+                            @{
+                                var p = (seat.Row) * orderList.Count + seat.Column;
+                                var seatTypes = Enum.GetValues(typeof(SeatType)).Cast<SeatType>()
+                                    .ToList().Select(st => new { Text = st.ToString(), Value = st });
+                                var selectColor = seat.SeatType == SeatType.VIP ? "bg-success" : seat.SeatType == SeatType.NORMAL ? "bg-primary" : "";
+                            }
+                            <select asp-for="@Model.Seats[p].SeatType" class="form-control @selectColor text-white selectSeatType">
+                                @foreach (var st in seatTypes)
+                                {
+                                    @if (st.Value == seat.SeatType)
+                                    {
+                                        <option value="@st.Value" selected="selected">@st.Text</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@st.Value">@st.Text</option>
+                                    }
+
+                                }
+                            </select>
+                            <input asp-for="@Model.Seats[p].Id" value="@seat.Id" type="hidden" />
+                            <input asp-for="@Model.Seats[p].RoomId" value="@seat.RoomId" type="hidden" />
+                            <input asp-for="@Model.Seats[p].Row" value="@seat.Row" type="hidden" />
+                            <input asp-for="@Model.Seats[p].Column" value="@seat.Column" type="hidden" />
+                        </td>
+                                }
+                        </tr>
+                                }
+                    </tbody>
+                </table></div>
+            }
+            <button class="btn btn-success" type="submit">Save</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts{ 
+    <script src="~/js/admin.js"></script>
+}
