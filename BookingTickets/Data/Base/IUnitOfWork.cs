@@ -13,6 +13,7 @@ namespace BookingTickets.Data.Base
         IScreeningRepository ScreeningRepository { get; }
         IReservationRepository ReservationRepository { get; }
         IReservationSeatRepository ReservationSeatRepository { get; }
+        IUserRepository UserRepository { get; }
         Task<int> SaveChangeAsync();
     }
 }

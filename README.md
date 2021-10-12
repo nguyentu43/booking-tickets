@@ -5,6 +5,3 @@
 ![OV](https://github.com/nguyentu43/booking-tickets/raw/master/home.jpeg)
 ### Admin
 ![OV](https://github.com/nguyentu43/booking-tickets/raw/master/admin.jpeg)
-
-## Todo
-* User Manager

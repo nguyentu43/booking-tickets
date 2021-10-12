@@ -21,6 +21,10 @@ namespace BookingTickets.Mapper
             CreateMap<SeatVM, Seat>();
             CreateMap<Screening, ScreeningVM>();
             CreateMap<ScreeningVM, Screening>();
+            CreateMap<ApplicationUser, AddUserVM>();
+            CreateMap<AddUserVM, ApplicationUser>();
+            CreateMap<ApplicationUser, UpdateUserVM>();
+            CreateMap<UpdateUserVM, ApplicationUser>();
         }
     }
 }

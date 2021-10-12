@@ -1,0 +1,57 @@
+﻿@page "{id?}"
+@model BookingTickets.Pages.Admin.User.UpdateModel
+@using BookingTickets.Constants 
+
+@{
+    ViewContext.HttpContext.Items["Title"] = "Edit User";
+}
+<div class="card">
+    <div class="card-header">
+        Edit User
+    </div>
+    <div class="card-body">
+        <form method="post">
+            <div class="text-danger" asp-validation-summary="All"></div>
+            <div class="form-group">
+                <label asp-for="UserVM.Name"></label>
+                <input class="form-control" asp-for="UserVM.Name" />
+            </div>
+            <div class="form-group">
+                <label asp-for="UserVM.Email"></label>
+                <input class="form-control" asp-for="UserVM.Email" readonly />
+            </div>
+            <div class="form-group">
+                <label asp-for="UserVM.UserName"></label>
+                <input class="form-control" asp-for="UserVM.UserName" readonly />
+            </div>
+            <div class="form-group">
+                <label asp-for="UserVM.Role"></label>
+                @{
+                    var enumToList = Enum.GetValues(typeof(Role)).Cast<Role>()
+                        .ToList().Select(r => new { Text = r.ToString(), Value = (int) r});
+                    var selectList = new SelectList(enumToList, "Value", "Text", Model.UserVM?.Role ?? 0);
+                }
+                @Html.DropDownListFor(m => m.UserVM.Role, selectList, "-select role-", new { @class = "form-control" })
+            </div>
+            <div class="form-check mb-3">
+                <input type="checkbox" class="form-check-input" id="change_password" />
+                <label class="form-check-label">Change password</label>
+            </div>
+            <div class="form-group" style="display:none" id="input_pass1">
+                <label asp-for="UserVM.Password"></label>
+                <input class="form-control" asp-for="UserVM.Password" type="password"/>
+            </div>
+            <button class="btn btn-success" type="submit">Save</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts{ 
+    <script>
+        jQuery().ready(function () {
+            jQuery("#change_password").change(function () {
+                jQuery("#input_pass1").toggle();
+            });
+        });
+    </script>
+}

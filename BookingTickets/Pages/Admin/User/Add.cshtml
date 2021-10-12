@@ -1,0 +1,47 @@
+﻿@page
+@model BookingTickets.Pages.Admin.User.AddModel
+@using BookingTickets.Constants 
+
+@{
+    ViewContext.HttpContext.Items["Title"] = "Add User";
+}
+<div class="card">
+    <div class="card-header">
+        Add User
+    </div>
+    <div class="card-body">
+        <form method="post">
+            <div class="text-danger" asp-validation-summary="All"></div>
+            <div class="form-group">
+                <label asp-for="UserVM.Name"></label>
+                <input class="form-control" asp-for="UserVM.Name" />
+            </div>
+            <div class="form-group">
+                <label asp-for="UserVM.Email"></label>
+                <input class="form-control" asp-for="UserVM.Email" />
+            </div>
+            <div class="form-group">
+                <label asp-for="UserVM.UserName"></label>
+                    <input class="form-control" asp-for="UserVM.UserName" />
+            </div>
+            <div class="form-group">
+                <label asp-for="UserVM.Role"></label>
+                @{
+                    var enumToList = Enum.GetValues(typeof(Role)).Cast<Role>()
+                        .ToList().Select(r => new { Text = r.ToString(), Value = (int) r});
+                    var selectList = new SelectList(enumToList, "Value", "Text", Model.UserVM?.Role ?? 0);
+                }
+                @Html.DropDownListFor(m => m.UserVM.Role, selectList, "-select role-", new { @class = "form-control" })
+            </div>
+            <div class="form-group" id="input_pass1">
+                <label asp-for="UserVM.Password"></label>
+                <input class="form-control" asp-for="UserVM.Password" type="password"/>
+            </div>
+            <div class="form-group" id="input_pass2">
+                <label asp-for="UserVM.ConfirmPassword"></label>
+                <input class="form-control" asp-for="UserVM.ConfirmPassword" type="password" />
+            </div>
+            <button class="btn btn-success" type="submit">Save</button>
+        </form>
+    </div>
+</div>

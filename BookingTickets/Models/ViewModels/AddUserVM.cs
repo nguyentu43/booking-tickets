@@ -2,8 +2,11 @@
 
 namespace BookingTickets.Models.ViewModels
 {
-    public class RegisterVM
+    public class AddUserVM
     {
+        [Required, EnumDataType(typeof(Constants.Role))]
+        public Constants.Role Role { get; set; }
+
         [Required]
         [StringLength(25)]
         public string Name { get; set; }

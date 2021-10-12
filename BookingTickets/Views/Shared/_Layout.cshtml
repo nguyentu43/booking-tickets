@@ -85,7 +85,7 @@
 
             @{
                 var path = ViewContext.HttpContext.Request.Path.Value.ToLower();
-                var pages = new string[] { "Movie", "Genre", "Cinema", "Reservation" };
+                var pages = new string[] { "Movie", "Genre", "Cinema", "Reservation", "User" };
             }
 
             @if (path.StartsWith("/admin"))

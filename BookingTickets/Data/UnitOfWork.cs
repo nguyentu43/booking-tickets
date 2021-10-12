@@ -13,13 +13,10 @@ namespace BookingTickets.Data
         public ICinemaRepository CinemaRepository { get; private set; }
         public IRoomRepository RoomRepository { get; private set; }
         public ISeatRepository SeatRepository { get; private set; }
-
         public IScreeningRepository ScreeningRepository { get; private set; }
-
         public IReservationRepository ReservationRepository { get; private set; }
-
         public IReservationSeatRepository ReservationSeatRepository { get; private set; }
-
+        public IUserRepository UserRepository { get; private set; }
         public UnitOfWork(ApplicationDbContext dbContext, IMapper _mapper)
         {
             _dbContext = dbContext;
@@ -32,6 +29,7 @@ namespace BookingTickets.Data
             ScreeningRepository = new ScreeningRepository(_dbContext, _mapper);
             ReservationRepository = new ReservationRepository(_dbContext, _mapper);
             ReservationSeatRepository = new ReservationSeatRepository(_dbContext, _mapper);
+            UserRepository = new UserRepository(_dbContext, _mapper);
         }
 
         public async Task<int> SaveChangeAsync()
