@@ -15,7 +15,9 @@
         <div>Rated: <span class="badge badge-primary">@Model.Movie.Rated</span></div>
         <div>Release Date: <span class="badge badge-dark">@Model.Movie.ReleaseDate.ToShortDateString()</span></div>
         <div>Director: <span class="badge badge-success"> @Model.Movie.Director</span></div>
-        <div>Cast: <span class="badge badge-info">@Model.Movie.Cast</span></div>
+        <div>Cast: @foreach (var cast in Model.Movie.Cast.Split(",").ToList()) { 
+            <span class="badge badge-info">@cast</span>
+        }</div>
         <div>Language: <span class="badge badge-info">@Model.Movie.Language</span></div>
     </div>
     
