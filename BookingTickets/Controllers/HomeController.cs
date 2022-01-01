@@ -25,12 +25,31 @@ namespace BookingTickets.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(SearchFormVM form)
+        public async Task<ActionResult> Index()
+        {
+            var mostViewedMovies = (await _unitOfWork.ReservationRepository.DbSet.Include(r => r.Screening).ThenInclude(s => s.Movie).Select(r => r.Screening.Movie).ToListAsync()).GroupBy(m => m.Id).OrderByDescending(g => g.Count()).Select(g => g.AsEnumerable().FirstOrDefault()).ToList();
+            var carouselMovies = await _unitOfWork.MovieRepository.DbSet.Take(10).ToListAsync();
+            var newestMovies = await _unitOfWork.MovieRepository.DbSet.OrderByDescending(m => m.ReleaseDate).Take(10).ToListAsync();
+            var genres = await _unitOfWork.GenreRepository.DbSet.Include(g => g.Movies).OrderBy(g => g.Name).ToListAsync();
+
+            return View(new IndexVM { 
+                CarouselMovies = carouselMovies,
+                Genres = genres,
+                MostViewedMovies = mostViewedMovies,
+                NewestMovies = newestMovies
+            });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Search(SearchFormVM form)
         {
             var whereBuilder = PredicateBuilder.New<Movie>(true);
             if (form.Keyword != null && form.Keyword != "")
             {
-                whereBuilder = whereBuilder.And(m => m.Title.ToLower().Contains(form.Keyword.ToLower()));
+                var keyword = form.Keyword.ToLower();
+                whereBuilder = whereBuilder
+                                .And(m => m.Title.ToLower().Contains(keyword) || m.Director.ToLower().Contains(keyword) 
+                                || m.Cast.ToLower().Contains(keyword));
             }
             if (form.SelectedGenre > 0)
             {
@@ -51,7 +70,7 @@ namespace BookingTickets.Controllers
                 form.PageTotal++;
             }
 
-            var model = new IndexHomeVM
+            var model = new SearchVM
             {
                 Movies = movies,
                 Genres = await _unitOfWork.GenreRepository.GetAll().ToListAsync(),

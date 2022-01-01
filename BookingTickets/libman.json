@@ -13,6 +13,23 @@
     {
       "library": "moment.js@2.29.1",
       "destination": "wwwroot/lib/moment.js/"
+    },
+    {
+      "library": "bootstrap@4.5.3",
+      "destination": "wwwroot/lib/bootstrap/",
+      "files": [
+        "css/bootstrap.min.css",
+        "js/bootstrap.bundle.min.js"
+      ]
+    },
+    {
+      "provider": "filesystem",
+      "library": "wwwroot/lib/datatables.net/",
+      "destination": "wwwroot/datatables/"
+    },
+    {
+      "library": "slick-carousel@1.8.1",
+      "destination": "wwwroot/lib/slick-carousel/"
     }
   ]
 }

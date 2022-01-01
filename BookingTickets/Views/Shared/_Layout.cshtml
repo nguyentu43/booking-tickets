@@ -1,5 +1,6 @@
 ﻿@inject Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> UserManager
 @inject Microsoft.AspNetCore.Identity.RoleManager<Microsoft.AspNetCore.Identity.IdentityRole> RoleManager
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
 
 @{ 
     ApplicationUser user = null;
@@ -15,17 +16,20 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewContext.HttpContext.Items["Title"] - BookingTickets</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/lib/summernote/summernote-bs4.min.css"/>
     <link rel="stylesheet" href="~/lib/jquery-datetimepicker/jquery.datetimepicker.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" />
+    @await RenderSectionAsync("Styles", required: false)
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-xl navbar-toggleable-xl navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">BookingTickets</a>
-
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    BookingTickets
+                </a>
+                <a class="btn btn-info" asp-controller="Home" asp-action="Search">Search Movie</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -33,17 +37,17 @@
 
                 <div class="navbar-collapse collapse justify-content-between">
                     <ul class="navbar-nav flex-grow-1 ">
-                        <li class="nav-item ml-md-auto">
-                            <a class="nav-link text-dark" asp-controller="Home" asp-action="MyReservations">My Reservations</a>
+                        <li class="nav-item ml-xl-auto">
+                            <a class="btn btn-outline-info  mr-2" asp-controller="Home" asp-action="MyReservations">Find Reservations</a>
                         </li>
                         @if (user == null)
                         {
                             <li class="nav-item">
-                                <a class="btn btn-primary mr-2" asp-controller="Auth" asp-action="Login">Login</a>
+                                <a class="btn btn-primary mt-2 mr-2 mt-md-0" asp-controller="Auth" asp-action="Login">Login</a>
 
                             </li>
                             <li class="nav-item">
-                                <a class="btn btn-success mt-3 mt-md-0" asp-controller="Auth" asp-action="Register">Register</a>
+                                <a class="btn btn-success mt-2 mt-md-0" asp-controller="Auth" asp-action="Register">Register</a>
                             </li>
                         }
                         else
@@ -53,16 +57,16 @@
                                 if (await UserManager.IsInRoleAsync(user, BookingTickets.Constants.Role.Admin.ToString()))
                                 {
                                     <li class="nav-item">
-                                        <a class="nav-link text-dark" href="~/Admin">Manage</a>
+                                        <a class="btn btn-outline-success mt-2 mr-2 mt-md-0" href="~/Admin">Manage</a>
                                     </li>
                                 }
                             }
 
                             <li class="nav-item">
-                                <a class="nav-link text-dark" href="#">Hello, @user.Name</a>
+                                <a class="btn btn-outline-secondary mt-2 mr-2 mt-md-0" href="#">Hello, @user.Name</a>
                             </li>
                             <li class="nav-item">
-                                <a class="btn btn-danger" asp-controller="Auth" asp-action="Logout">Logout</a>
+                                <a class="btn btn-danger mt-2 mt-md-0" asp-controller="Auth" asp-action="Logout">Logout</a>
                             </li>
                         }
 
@@ -93,7 +97,7 @@
                 <div class="row">
                     <div class="col-md-2">
                         <div class="list-group">
-                            <a href="/Admin" class="list-group-item list-group-item-action @(path == "/admin" ? "active" : "")">Statistics</a>
+                            <a href="~/Admin" class="list-group-item list-group-item-action @(path == "/admin" ? "active" : "")">Statistics</a>
                             @foreach (var name in pages)
                             {
                                 <a href="~/Admin/@name"
@@ -121,11 +125,14 @@
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="~/lib/summernote/summernote-bs4.min.js"></script>
     <script src="~/lib/jquery-datetimepicker/jquery.datetimepicker.full.min.js"></script>
     <script src="~/lib/jquery.steps/jquery.steps.min.js"></script>
     <script src="~/lib/moment.js/moment.min.js"></script>
+    <script>
+        var baseUrl = "@Configuration["BaseUrl"]";
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
     @if (ViewContext.HttpContext.Request.Path.Value?.ToLower().StartsWith("/admin") == false)
     {

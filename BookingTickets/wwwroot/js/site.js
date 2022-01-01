@@ -17,7 +17,7 @@
                         alert('Must choose a screening');
                         return false;
                     }
-                    jQuery.getJSON(`/ajax/getAvailableSeats?screeningId=${selectedScreening.data('id')}`)
+                    jQuery.getJSON(`${baseUrl}/ajax/getAvailableSeats?screeningId=${selectedScreening.data('id')}`)
                         .done(function (data) {
 
                             let rowIndex = 0;
@@ -77,11 +77,11 @@
                                 <div class="rounded text-white p-2 ${seat.type === 'VIP' ? 'bg-success' : 'bg-primary'}">
                                     ${seat.text}<br/>
                                     ${seat.type}<br/>
-                                    ${seatPrice}$
+                                    ${seatPrice.toPrecision(3)}$
                                 </div>
                             </div>`);
                     }
-                    totalElem.text(total + '$');
+                    totalElem.text(total.toPrecision(3) + '$');
                     return true;
                 default: return true;
             }
@@ -113,7 +113,7 @@
         }
         var container = jQuery("#screening-list");
         container.html('');
-        jQuery.getJSON(`/ajax/getScreenings?movieId=${movieId}&roomId=${room.id}&screeningDate=${screeningDate}`)
+        jQuery.getJSON(`${baseUrl}/ajax/getScreenings?movieId=${movieId}&roomId=${room.id}&screeningDate=${screeningDate}`)
             .done(function (data) {
                 if (data.length === 0) {
                     container.append("<div class='text-center'>Screening data not found</div>")
@@ -149,7 +149,7 @@
         reservation["ScreeningId"] = selectedScreening.data('id');
         reservation["Seats"] = selectedSeats.map(i => i.id);
         jQuery.ajax({
-            url: '/ajax/booking',
+            url: `${baseUrl}/ajax/booking`,
             data: JSON.stringify(reservation),
             headers: {
                 "Content-type": "application/json"
@@ -161,8 +161,41 @@
             }
             else {
                 alert(res.message);
-                window.location.href = "/";
+                window.location.href = baseUrl;
             }
         });
     });
+
+
+    let carousel = jQuery("#movie-carousel");
+    if (carousel.length > 0) {
+        carousel.slick({
+            slidesToShow: 5,
+            centerMode: true,
+            adaptiveHeight: true,
+            infinite: true,
+            autoplay: true,
+            responsive: [
+                {
+                    breakpoint: 1024,
+                    settings: {
+                        centerMode: true,
+                        adaptiveHeight: true,
+                        slidesToShow: 3,
+                        infinite: true,
+                        autoplay: true,
+                    }
+                },
+                {
+                    breakpoint: 480,
+                    settings: {
+                        slidesToShow: 3,
+                        infinite: true,
+                        autoplay: true,
+                        centerMode: false
+                    }
+                }
+            ]
+        });
+    }
 });

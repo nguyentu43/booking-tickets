@@ -5,21 +5,21 @@
     ViewContext.HttpContext.Items["Title"] = "Cinema";
 
 }
-<div class="table-responsive">
+
     <a class="btn btn-primary mb-3" asp-page="Edit">Add</a>
-    <form method="post">
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Address</th>
-                    <th scope="col">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var c in Model.Cinemas)
-                {
+    <form method="post"><div class="table-responsive" >
+    <table class="table table-bordered" id="table-paginate">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Address</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var c in Model.Cinemas)
+            {
                 <tr>
                     <td>@c.Id</td>
                     <td>@c.Name</td>
@@ -30,11 +30,11 @@
                             <a href="~/Admin/Cinema/@c.Id/Room" class="btn btn-info">Manage Room</a>
                             <button asp-page-handler="Delete" class="btn btn-danger btnDelete" asp-route-id="@c.Id">Delete</button>
                         </div>
-                        
+
                     </td>
                 </tr>
-                }
-            </tbody>
-        </table>
-    </form>
+            }
+        </tbody>
+    </table>
 </div>
+</form>

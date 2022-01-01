@@ -4,19 +4,40 @@
     ViewContext.HttpContext.Items["Title"] = Model.Movie.Title;
 }
 
-<div class="mb-3 d-flex">
-    <div>
-        <img src="~/cover/@Model.Movie.Cover" style="height: 300px" />
+<div class="row mb-3">
+    <div class="col-sm-5 col-md-4 col-xl-3 text-center">
+        <img class="rounded" src="~/cover/@Model.Movie.Cover" style="height: 300px" />
     </div>
-    <div class="ml-3">
+    <div class="col-sm">
         <div class="h1">@Model.Movie.Title</div>
-        <div>Genres: <span class="badge badge-success">@string.Join(", ", Model.Movie.Genres.Select(g => g.Name))</span></div>
+        <div>
+            Genres:
+            @foreach (var genre in Model.Movie.Genres)
+                    {
+                        var param = new Dictionary<string, string>();
+                        param.Add("Form.SelectedGenre", genre.Id.ToString());
+                <span class="badge badge-success">
+                    <a asp-controller="Home" class="text-white" asp-action="Search" asp-all-route-data="param" >@genre.Name</a>
+                </span>
+            }
+        </div>
         <div>Duration: <span class="badge badge-info">@Model.Movie.Duration mins</span></div>
         <div>Rated: <span class="badge badge-primary">@Model.Movie.Rated</span></div>
         <div>Release Date: <span class="badge badge-dark">@Model.Movie.ReleaseDate.ToShortDateString()</span></div>
-        <div>Director: <span class="badge badge-success"> @Model.Movie.Director</span></div>
-        <div>Cast: @foreach (var cast in Model.Movie.Cast.Split(",").ToList()) { 
-            <span class="badge badge-info">@cast</span>
+        <div>Director: 
+            <span class="badge badge-success">
+                @{
+                    var paramD = new Dictionary<string, string>();
+                    paramD.Add("Form.Keyword", Model.Movie.Director);
+                }
+                <a asp-controller="Home" class="text-white" asp-action="Search" asp-all-route-data="paramD">@Model.Movie.Director</a>
+            </span></div>
+        <div>Cast: @foreach (var cast in Model.Movie.Cast.Split(",").ToList()) {
+            var param = new Dictionary<string, string>();
+            param.Add("Form.Keyword", cast);
+            <span class="badge badge-info">
+                <a asp-controller="Home" class="text-white" asp-action="Search" asp-all-route-data="param">@cast</a>
+            </span>
         }</div>
         <div>Language: <span class="badge badge-info">@Model.Movie.Language</span></div>
     </div>
@@ -38,7 +59,7 @@
             <div class="my-3">
                 <div>
                     <label class="mb-0 mr-2">Rooms</label>
-                    @Html.DropDownList("roomId", new SelectList(Model.Rooms, "Id", "Name", "", "Cinema.Name"), "Select rooms", new { @class = "form-control" })
+                    @Html.DropDownList("roomId", new SelectList(Model.Rooms, "Id", "Name", "", "Cinema.Name"), "Select a room", new { @class = "form-control" })
                 </div>
                 <div class="mt-3 mt-md-0">
                     <label class="mb-0">Date</label>

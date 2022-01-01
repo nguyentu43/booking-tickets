@@ -24,7 +24,7 @@ namespace BookingTickets.Components
                 .DbSet.Where(rs => rs.ReservationId == reservation.Id)
                 .Include(rs => rs.Seat)
                 .ThenInclude(s => s.Room).ThenInclude(r => r.Cinema).ToListAsync();
-            return View(new ViewModels.DetailsReservation
+            return View(new ViewModels.ReservationDetailVM
             {
                 Reservation = reservation,
                 ReservationSeats = reservationSeats

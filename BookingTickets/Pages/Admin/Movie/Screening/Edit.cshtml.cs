@@ -50,6 +50,7 @@ namespace BookingTickets.Pages.Admin.Movie.Screening
                     sc.Id = (int)id;
                     _unitOfWork.ScreeningRepository.Update(sc);
                     await _unitOfWork.SaveChangeAsync();
+                    TempData["message"] = "Update successful";
                 }
                 return RedirectToPage(new { id = sc.Id });
             }

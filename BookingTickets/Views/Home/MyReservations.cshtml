@@ -2,17 +2,27 @@
 
 @{ 
     ViewContext.HttpContext.Items["Title"] = "My Reservation";
+    var phone = ViewContext.HttpContext.Request.Query["phone"];
 }
 
 @if (!User.Identity.IsAuthenticated)
 {
-    <form method="get" class="mb-3">
-        <div class="form-group">
-            <label>Phone</label>
-            <input class="form-control" name="Phone" pattern="\d{10,15}" value="@ViewContext.HttpContext.Request.Query["phone"]" required />
-        </div>
-        <button class="btn btn-outline-primary">Search</button>
-    </form>
+<div class="border rounded p-2 mb-2">
+    <div class="col-4">
+        <form method="get" class="mb-3">
+            <div class="form-group">
+                <label>Phone</label>
+                <input class="form-control"
+                       name="Phone"
+                       pattern="\d{10,15}"
+                       placeholder="Type your phone to find reservations"
+                       value="@phone" required />
+            </div>
+            <button class="btn btn-outline-primary">Search</button>
+        </form>
+    </div>
+   
+</div>
 }
 
 @foreach (var id in Model)
@@ -20,6 +30,6 @@
     @await Component.InvokeAsync("DetailsReservation", new { id = id });
 }
 
-@if(Model.Count == 0) { 
+@if(Model.Count == 0 && string.IsNullOrEmpty(phone)) { 
     <h5>Reservation is empty</h5>
 }

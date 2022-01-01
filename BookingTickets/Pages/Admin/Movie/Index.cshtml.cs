@@ -19,7 +19,6 @@ namespace BookingTickets.Pages.Admin.Movie
         {
             Movies = await _unitOfWork.MovieRepository.GetAll().ToListAsync();
         }
-
         public async Task<IActionResult> OnPostDeleteAsync(int id)
         {
             await _unitOfWork.MovieRepository.Remove(id);

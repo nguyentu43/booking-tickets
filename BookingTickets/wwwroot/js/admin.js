@@ -33,14 +33,19 @@ jQuery().ready(function () {
             hAxis: { title: "Month/Year" },
             vAxis: { title: "Revenue ($)" },
             height: 600,
-            bar: {groupWidth: 20}
+            bar: { groupWidth: 20 }
         };
 
-        let chart = new google.visualization.ColumnChart(document.getElementById('curve-chart'));
+        let container = document.getElementById('curve-chart');
 
-        if (chartData.length < 2) return;
+        if (container != null) {
+            let chart = new google.visualization.ColumnChart(container);
 
-        chart.draw(google.visualization.arrayToDataTable(chartData), options);
+            if (chartData.length < 2) return;
+
+            chart.draw(google.visualization.arrayToDataTable(chartData), options);
+        }
     }
 
+    jQuery("#table-paginate").DataTable();
 });
