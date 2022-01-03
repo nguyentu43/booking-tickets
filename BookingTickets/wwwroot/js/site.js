@@ -65,7 +65,7 @@
                         alert('Must choose a seat');
                         return false;
                     }
-                    let totalElem = jQuery('#totalPrice');
+                    let totalElem = jQuery('#price-total');
                     let container = jQuery('#selected-seat-list');
                     container.html('');
                     let price = selectedScreening.data('price');
@@ -73,7 +73,7 @@
                     for (let seat of selectedSeats) {
                         let seatPrice = seat.type === 'VIP' ? price * 1.1 : price;
                         total += seatPrice;
-                        container.append(`<div class="col-4">
+                        container.append(`<div class="col-12 col-sm-6 col-md-4 my-1">
                                 <div class="rounded text-white p-2 ${seat.type === 'VIP' ? 'bg-success' : 'bg-primary'}">
                                     ${seat.text}<br/>
                                     ${seat.type}<br/>
@@ -81,7 +81,7 @@
                                 </div>
                             </div>`);
                     }
-                    totalElem.text(total.toPrecision(3) + '$');
+                    totalElem.text('Total: ' + total.toPrecision(3) + '$');
                     return true;
                 default: return true;
             }
@@ -116,11 +116,11 @@
         jQuery.getJSON(`${baseUrl}/ajax/getScreenings?movieId=${movieId}&roomId=${room.id}&screeningDate=${screeningDate}`)
             .done(function (data) {
                 if (data.length === 0) {
-                    container.append("<div class='text-center'>Screening data not found</div>")
+                    container.append("<div class='text-center'>Screening data not found.Try another day</div>")
                     return;
                 }
                 for (let item of data) {
-                    container.append(`<div class="col col-sm-6 mt-sm-0 mt-3">
+                    container.append(`<div class="col-12 col-sm-6 col-md-4 mt-3">
                             <div class="p-2 border rounded screening-list__item" data-id="${item.id}" data-price="${item.price}">
                                     <span class="badge badge-secondary">${item.format}</span>
                                     <h3>${item.price}$</h3>
@@ -138,10 +138,10 @@
             });
     });
 
-    $("#formBooking").submit(function (e) {
+    $("#form-booking").submit(function (e) {
         e.preventDefault();
         if (selectedScreening == null || selectedSeats.length === 0) return;
-        let formData = $('#formBooking').serializeArray();
+        let formData = $('#form-booking').serializeArray();
         let reservation = {};
         for (let item of formData) {
             reservation[item.name] = item.value;

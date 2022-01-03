@@ -214,6 +214,9 @@ csx/
 ecf/
 rcf/
 
+# AppSetting.json
+BookingTickets/appsettings.Development.json
+
 # Windows Store app package directories and files
 AppPackages/
 BundleArtifacts/
