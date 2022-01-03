@@ -30,6 +30,13 @@
     {
       "library": "slick-carousel@1.8.1",
       "destination": "wwwroot/lib/slick-carousel/"
+    },
+    {
+      "library": "inputmask@4.0.9",
+      "destination": "wwwroot/lib/inputmask/",
+      "files": [
+        "jquery.inputmask.bundle.min.js"
+      ]
     }
   ]
 }

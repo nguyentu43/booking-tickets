@@ -75,7 +75,6 @@ body {
 
 .movie .movie__info{
     overflow: hidden;
-    
 }
 
 .movie .movie__info div {
@@ -152,6 +151,10 @@ body {
 
 #seat-list{
     min-width:600px;
+}
+
+#seat-list .seat-list__item{
+    cursor: pointer;
 }
 
 #seat-list .seat-list__item, #seat-list .seat-list__heading{

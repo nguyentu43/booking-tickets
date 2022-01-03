@@ -89,7 +89,6 @@
     });
 
     jQuery("input[name='screeningDate']").datetimepicker({ timepicker: false, format: 'm/d/Y' });
-
     jQuery("select[name='roomId']").change(function () {
         let option = jQuery(this).find("option:selected");
         let i = option.val();
@@ -116,7 +115,7 @@
         jQuery.getJSON(`${baseUrl}/ajax/getScreenings?movieId=${movieId}&roomId=${room.id}&screeningDate=${screeningDate}`)
             .done(function (data) {
                 if (data.length === 0) {
-                    container.append("<div class='text-center'>Screening data not found.Try another day</div>")
+                    container.append("<div class='text-center'>Screening data not found. Try another day</div>")
                     return;
                 }
                 for (let item of data) {
@@ -148,6 +147,8 @@
         }
         reservation["ScreeningId"] = selectedScreening.data('id');
         reservation["Seats"] = selectedSeats.map(i => i.id);
+        reservation["CardDate"] = moment(reservation["CardDate"]).format("MM/DD/YYYY");
+
         jQuery.ajax({
             url: `${baseUrl}/ajax/booking`,
             data: JSON.stringify(reservation),
@@ -165,7 +166,6 @@
             }
         });
     });
-
 
     let carousel = jQuery("#movie-carousel");
     if (carousel.length > 0) {
@@ -198,4 +198,8 @@
             ]
         });
     }
+
+    jQuery("input[name='CardNumber']").inputmask("9999 9999 9999 9999");
+    jQuery("input[name='Cvc']").inputmask("999");
+    jQuery("input[name='Phone']").inputmask("9{10,15}");
 });

@@ -5,6 +5,8 @@ using LinqKit;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Stripe;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -17,11 +19,13 @@ namespace BookingTickets.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IConfiguration _configuration;
 
-        public HomeController(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager)
+        public HomeController(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager, IConfiguration configuration)
         {
             _unitOfWork = unitOfWork;
             _userManager = userManager;
+            _configuration = configuration;
         }
 
         [HttpGet]
@@ -32,7 +36,8 @@ namespace BookingTickets.Controllers
             var newestMovies = await _unitOfWork.MovieRepository.DbSet.OrderByDescending(m => m.ReleaseDate).Take(10).ToListAsync();
             var genres = await _unitOfWork.GenreRepository.DbSet.Include(g => g.Movies).OrderBy(g => g.Name).ToListAsync();
 
-            return View(new IndexVM { 
+            return View(new IndexVM
+            {
                 CarouselMovies = carouselMovies,
                 Genres = genres,
                 MostViewedMovies = mostViewedMovies,
@@ -48,7 +53,7 @@ namespace BookingTickets.Controllers
             {
                 var keyword = form.Keyword.ToLower();
                 whereBuilder = whereBuilder
-                                .And(m => m.Title.ToLower().Contains(keyword) || m.Director.ToLower().Contains(keyword) 
+                                .And(m => m.Title.ToLower().Contains(keyword) || m.Director.ToLower().Contains(keyword)
                                 || m.Cast.ToLower().Contains(keyword));
             }
             if (form.SelectedGenre > 0)
@@ -103,13 +108,12 @@ namespace BookingTickets.Controllers
         }
 
         [HttpGet("/ajax/getScreenings")]
-        public async Task<IActionResult> GetScreenings(int roomId, int movieId, string screeningDate)
+        public async Task<IActionResult> GetScreenings(int roomId, int movieId, DateTime screeningDate)
         {
-            var screeningDateObj = DateTime.Parse(screeningDate);
             var screenings = await _unitOfWork.ScreeningRepository.DbSet
                 .Where(sc => sc.RoomId == roomId && sc.MovieId == movieId
                              && sc.ScreeningStart >= DateTime.Now
-                             && sc.ScreeningStart.Date == screeningDateObj.Date
+                             && sc.ScreeningStart.Date == screeningDate.Date
                 )
                 .OrderBy(sc => sc.ScreeningStart)
                 .ToListAsync();
@@ -198,6 +202,30 @@ namespace BookingTickets.Controllers
 
             try
             {
+                StripeConfiguration.ApiKey = _configuration["StripeApi:Sk"].ToString();
+
+                var tokenService = new TokenService();
+                var token = await tokenService.CreateAsync(new TokenCreateOptions
+                {
+                    Card = new TokenCardOptions
+                    {
+                        Cvc = form.Cvc,
+                        Number = form.CardNumber,
+                        ExpMonth = form.CardDate.Month,
+                        ExpYear = form.CardDate.Year
+                    }
+                });
+
+                var charge = new ChargeCreateOptions
+                {
+                    Amount = Convert.ToInt32(total * 100),
+                    Currency = "usd",
+                    Source = token.Id
+                };
+
+                var chargeService = new ChargeService();
+                await chargeService.CreateAsync(charge);
+
                 _unitOfWork.ReservationRepository.Add(reservation);
                 await _unitOfWork.SaveChangeAsync();
 
@@ -208,6 +236,10 @@ namespace BookingTickets.Controllers
                 }
 
                 await _unitOfWork.SaveChangeAsync();
+            }
+            catch (StripeException e)
+            {
+                return Ok(new { error = e.StripeError.Message });
             }
             catch (Exception)
             {

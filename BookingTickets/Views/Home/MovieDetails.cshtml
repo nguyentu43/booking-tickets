@@ -116,14 +116,16 @@
                 </div>
                 <div class="form-group">
                     <label>Phone</label>
-                    <input class="form-control" name="Phone" pattern="\d{10,15}" required placeholder="Enter your phone"/>
+                    <input class="form-control" name="Phone" pattern="\d{10,15}" required placeholder="Enter your phone" />
                 </div>
                 <div class="form-group">
                     <label>Card Number</label>
+                    <input class="form-control" name="CardNumber" required placeholder="Enter your card number" />
+                </div>
+                <div class="form-group">
                     <div class="input-group">
-                        <input class="form-control" name="CardNumber" required placeholder="Enter your card number"/>
-                        <input class="form-control" name="CardDate" required placeholder="MM/YYYY"/>
-                        <input class="form-control" name="ZipCode" type="number" required placeholder="Zip Code"/>
+                        <input class="form-control" name="CardDate" type="month" required placeholder="Expired date" />
+                        <input class="form-control" name="Cvc" required placeholder="CVC" />
                     </div>
                 </div>
                 <button type="submit" id="btnBooking" class="btn btn-outline-danger">Booking@(user == null ? " without Login" : "" )</button>
