@@ -1,12 +1,21 @@
 ﻿@model BookingTickets.Models.ViewModels.MovieDetailVM
 @inject Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> UserManager
-@{ 
+@{
     ViewContext.HttpContext.Items["Title"] = Model.Movie.Title;
+    var hasLandscape = Model.Movie.LandscapeCover != null;
 }
 
-<div class="row mb-3">
+
+@if (hasLandscape)
+{
+    <div class="landscape-cover text-center">
+        <img src="@Model.Movie.LandscapeCover" class="rounded"/>
+    </div>
+}
+
+<div class="row mb-3 @(Model.Movie.LandscapeCover != null ? "has-landscape-cover" : "")">
     <div class="col-sm-5 col-md-4 col-xl-3 text-center">
-        <img class="rounded" src="~/cover/@Model.Movie.Cover" style="height: 300px" />
+        <img class="rounded" src="@Model.Movie.Cover" style="height: 300px" />
     </div>
     <div class="col-sm">
         <div class="h1">@Model.Movie.Title</div>
@@ -44,6 +53,20 @@
     
 </div>
 
+@if (Model.Movie.Trailer != null)
+{
+    <div class="card mb-3">
+        <div class="card-header bg-primary text-white">Trailer</div>
+        <div class="card-body d-flex">
+            <iframe
+            style="flex: 1; height: 400px"
+        src="@Model.Movie.Trailer" 
+        title="YouTube video player" frameborder="0" 
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+    </div>
+}
+
 <div class="card mb-3">
     <div class="card-header bg-primary text-white">Description</div>
     <div class="card-body">
@@ -66,7 +89,7 @@
                     <input name="screeningDate" value="@DateTime.Now.ToString("MM/dd/yyyy")" class="form-control" />
                 </div>
                 <input name="movieId" type="hidden" value="@ViewContext.RouteData.Values["id"]" />
-                <button id="btnSearchScreening" class="btn btn-outline-primary mt-3">Search</button>
+                <button id="btnSearchScreening" class="btn btn-primary mt-3">Search</button>
             </div>
             <div class="container">
                 <div id="screening-list" class="row">
@@ -128,9 +151,9 @@
                         <input class="form-control" name="Cvc" required placeholder="CVC" />
                     </div>
                 </div>
-                <button type="submit" id="btnBooking" class="btn btn-outline-danger">Booking@(user == null ? " without Login" : "" )</button>
+                <button type="submit" id="btnBooking" class="btn btn-danger">Booking@(user == null ? " without Login" : "" )</button>
                 @if (user == null)
-                {<a asp-controller="Auth" asp-action="Login" class="btn btn-outline-primary">Login</a>}
+                {<a asp-controller="Auth" asp-action="Login" class="btn btn-primary">Login</a>}
             </form>
         </section>
     </div>

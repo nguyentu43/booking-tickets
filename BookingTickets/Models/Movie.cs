@@ -22,7 +22,10 @@ namespace BookingTickets.Models
         public int Duration { get; set; }
         [Required]
         public string Rated { get; set; }
+        [Required]
         public string Cover { get; set; }
+        public string Trailer { get; set; }
+        public string LandscapeCover { get; set; }
         [Required]
         [DataType(DataType.Date)]
         public DateTime ReleaseDate { get; set; }

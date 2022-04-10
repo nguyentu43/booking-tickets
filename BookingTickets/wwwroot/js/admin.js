@@ -48,4 +48,5 @@ jQuery().ready(function () {
     }
 
     jQuery("#table-paginate").DataTable();
+
 });

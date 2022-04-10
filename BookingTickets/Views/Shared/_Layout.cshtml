@@ -17,6 +17,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewContext.HttpContext.Items["Title"] - BookingTickets</title>
     <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/bootswatch/bootstrap.min.css" />
     <link rel="stylesheet" href="~/lib/summernote/summernote-bs4.min.css"/>
     <link rel="stylesheet" href="~/lib/jquery-datetimepicker/jquery.datetimepicker.min.css" />
     @await RenderSectionAsync("Styles", required: false)
@@ -121,7 +122,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2021 - BookingTickets
+            &copy; @(DateTime.Now.Year) - BookingTickets
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

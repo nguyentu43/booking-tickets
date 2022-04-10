@@ -39,31 +39,21 @@ namespace BookingTickets.Pages.Admin.Movie
             {
                 if (id == null)
                 {
-                    if (Movie.CoverFile == null)
-                    {
-                        ModelState.AddModelError("", "Cover File is required");
-                        return Page();
-                    }
-                    else
-                    {
-                        var movie = await _unitOfWork.MovieRepository.Add(Movie);
-                        movie.Cover = await SaveCoverFile();
-                        await _unitOfWork.SaveChangeAsync();
+                    var movie = await _unitOfWork.MovieRepository.Add(Movie);
+                    await _unitOfWork.SaveChangeAsync();
 
-                        foreach (var g in Movie.Genres)
-                        {
-                            _unitOfWork.MovieGenreRepository.Add(new Models.MovieGenre { GenreId = g, MovieId = movie.Id });
-                        }
-                        await _unitOfWork.SaveChangeAsync();
-
-                        TempData["message"] = "Create successful";
-                        return RedirectToPage(new { id = movie.Id });
+                    foreach (var g in Movie.Genres)
+                    {
+                        _unitOfWork.MovieGenreRepository.Add(new Models.MovieGenre { GenreId = g, MovieId = movie.Id });
                     }
+                    await _unitOfWork.SaveChangeAsync();
+
+                    TempData["message"] = "Create successful";
+                    return RedirectToPage(new { id = movie.Id });
                 }
                 else
                 {
                     var movie = await _unitOfWork.MovieRepository.Update((int)id, Movie);
-                    if (Movie.CoverFile != null) movie.Cover = await SaveCoverFile();
                     await _unitOfWork.SaveChangeAsync();
 
                     var movieGenres = await _unitOfWork.MovieGenreRepository.DbSet.Where(mg => mg.MovieId == movie.Id).ToListAsync();
@@ -81,14 +71,6 @@ namespace BookingTickets.Pages.Admin.Movie
                 }
             }
             return Page();
-        }
-
-        private async Task<string> SaveCoverFile()
-        {
-            var filename = StringGeneration.Unique() + Path.GetExtension(Movie.CoverFile.FileName);
-            var path = Path.Combine(_enviroment.WebRootPath, "cover", filename);
-            await Movie.CoverFile.CopyToPath(path);
-            return filename;
         }
     }
 }

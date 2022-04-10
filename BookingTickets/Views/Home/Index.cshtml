@@ -17,7 +17,7 @@
     {
         <a asp-controller="Home" asp-action="MovieDetails" asp-route-id="@movie.Id">
             <div class="movie-carousel__item">
-                <img class="rounded" src="~/cover/@movie.Cover" />
+                <img class="rounded" src="@movie.Cover" />
             </div>
         </a>
     }
@@ -25,11 +25,11 @@
 
 <div id="most-viewed-movies" class="movie-list movie-list--land mt-3 d-flex flex-row flex-nowrap">
     <div class="movie-list__header bg-danger rounded text-white d-flex align-items-center justify-content-center">
-        <h2>Most Viewed</h2>
+        <h2 class="mb-0">Most Viewed</h2>
     </div>
     @foreach (var movie in Model.MostViewedMovies)
     {
-        <div class="rounded movie-list__item d-flex px-1 align-items-center justify-content-center" style="background-image: url(@Url.Content("~/cover/" + movie.Cover))">
+        <div class="rounded movie-list__item d-flex px-1 align-items-center justify-content-center" style="background-image: url(@Url.Content(movie.Cover))">
             <a asp-controller="Home" class="text-truncate font-weight-bold text-white text-decoration-none" asp-action="MovieDetails" asp-route-id="@movie.Id">
                 @movie.Title
             </a>
@@ -39,11 +39,11 @@
 
 <div id="newest-movies" class="movie-list movie-list--land mt-3 d-flex flex-row flex-nowrap">
     <div class="movie-list__header bg-primary rounded text-white d-flex align-items-center justify-content-center">
-        <h2>Newest Movie</h2>
+        <h2 class="mb-0">Newest</h2>
     </div>
     @foreach (var movie in Model.NewestMovies)
     {
-        <div class="rounded movie-list__item d-flex px-1 align-items-center justify-content-center" style="background-image: url(@Url.Content("~/cover/" + movie.Cover))">
+        <div class="rounded movie-list__item d-flex px-1 align-items-center justify-content-center" style="background-image: url(@Url.Content(movie.Cover))">
             <a asp-controller="Home" class="text-truncate text-white font-weight-bold text-decoration-none" asp-action="MovieDetails" asp-route-id="@movie.Id">
                 @movie.Title
             </a>
@@ -51,17 +51,28 @@
      }
 </div>
 
+<div class="category-list flex-row d-flex flex-nowrap mt-3">
+@foreach (var genre in Model.Genres)
+{
+    <div class="bg-success rounded p-4 text-center">
+        <h3 class="mb-0"><a href="#category-@genre.Id" class="text-decoration-none text-white">@genre.Name</a></h3>
+    </div>
+}
+</div>
+
+
+
 @foreach (var genre in Model.Genres)
 {
     var param = new Dictionary<string, string>();
     param.Add("Form.SelectedGenre", genre.Id.ToString());
-    <div id="newest-movies" class="movie-list movie-list--port mt-3 d-flex flex-row flex-nowrap">
-        <a asp-controller="Home" class="movie-list__header border text-center font-weight-bold rounded text-decoration-none text-dark" asp-action="Search" asp-all-route-data="param" >
+    <div class="movie-list movie-list--port mt-3 d-flex flex-row flex-nowrap" id="category-@genre.Id">
+        <a asp-controller="Home" class="movie-list__header border text-center font-weight-bold rounded text-decoration-none text-white" asp-action="Search" asp-all-route-data="param" >
             @genre.Name
         </a>
         @foreach (var movie in genre.Movies.Take(10))
         {
-    <a asp-controller="Home" class="movie-list__item rounded" asp-action="MovieDetails" asp-route-id="@movie.Id" style="background-image: url(@Url.Content("~/cover/" + movie.Cover))">
+    <a asp-controller="Home" class="movie-list__item rounded" asp-action="MovieDetails" asp-route-id="@movie.Id" style="background-image: url(@Url.Content(movie.Cover)">
     </a>
         }
     </div>

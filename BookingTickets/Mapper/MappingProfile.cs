@@ -11,8 +11,10 @@ namespace BookingTickets.Mapper
         {
             CreateMap<Genre, GenreVM>();
             CreateMap<GenreVM, Genre>();
-            CreateMap<Movie, MovieVM>().ForMember(d => d.Genres, opt => opt.MapFrom(s => s.Genres.Select(g => g.Id).ToList()));
-            CreateMap<MovieVM, Movie>().ForMember(d => d.Genres, opt => opt.Ignore());
+            CreateMap<Movie, MovieVM>()
+                .ForMember(d => d.Genres, opt => opt.MapFrom(s => s.Genres.Select(g => g.Id).ToList()));
+            CreateMap<MovieVM, Movie>()
+                .ForMember(d => d.Genres, opt => opt.Ignore());
             CreateMap<Cinema, CinemaVM>();
             CreateMap<CinemaVM, Cinema>();
             CreateMap<Room, RoomVM>();

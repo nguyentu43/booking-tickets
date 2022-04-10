@@ -11,7 +11,7 @@
         @(Model.Movie == null ? "Create" : "Edit") Movie
     </div>
     <div class="card-body">
-        <form method="post" enctype="multipart/form-data">
+        <form method="post">
             <div class="text-danger" asp-validation-summary="All"></div>
             <div class="form-group">
                 <label asp-for="Movie.Title"></label>
@@ -45,16 +45,34 @@
                 @Html.LabelFor(m => m.Movie.Genres)
                 @Html.ListBoxFor(m => m.Movie.Genres, new SelectList(Model.Genres, "Id", "Name"), new { @class = "form-control" })
             </div>
-            <div class="form-group">
-                <label asp-for="Movie.CoverFile"></label>
-                <input class="form-control" asp-for="Movie.CoverFile" type="file" />
+
+            <div class="mb-2">
+                <button class="button-cloudinary-upload btn btn-primary mb-2" data-field="Movie.Cover" type="button">
+                    Upload <label asp-for="Movie.Cover" class="mb-0"></label>
+                </button><br/>
+                    <img class="img-thumbnail w-25 @(Model.Movie.Cover == null ? "d-none" : "")" data-field="Movie.Cover" src="@Model.Movie.Cover" />
+                <input type="hidden" asp-for="Movie.Cover" />
             </div>
-            @if (Model.Movie?.Cover != null)
-            {
-                <div>
-                    <img class="img-thumbnail w-25" src="~/cover/@Model.Movie.Cover" />
-                    <input type="hidden" asp-for="Movie.Cover" />
-                </div>
+
+            <div class="mb-2">
+                <button class="button-cloudinary-upload btn btn-primary mb-2" data-field="Movie.LandscapeCover" type="button">
+                    Upload  <label asp-for="Movie.LandscapeCover" class="mb-0"></label>
+                </button>
+                <br/>
+               <img class="img-thumbnail w-50 @(Model.Movie.LandscapeCover == null ? "d-none" : "")" data-field="Movie.LandscapeCover" src="@Model.Movie.LandscapeCover" />
+                <input type="hidden" asp-for="Movie.LandscapeCover" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Movie.Trailer"></label>
+                <input class="form-control" id="releaseDate" name="Movie.Trailer" value="@Model.Movie?.Trailer")" />
+            </div>
+            @if(Model.Movie.Trailer != null){
+                <iframe 
+                 
+                src='@Model.Movie.Trailer' 
+                title="YouTube video player" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             }
             <div class="form-group">
                 <label asp-for="Movie.Description"></label>
@@ -65,10 +83,30 @@
     </div>
 </div>
 @section Scripts{
+<script src="https://media-library.cloudinary.com/global/all.js"></script>
     <script>
         jQuery().ready(function () {
             jQuery("#description").summernote({ height: 200 });
             jQuery("#releaseDate").datetimepicker({ timepicker: false, format: 'm/d/Y' });
+
+            jQuery('.button-cloudinary-upload').click(function (e) {
+                e.preventDefault();
+
+                const field = jQuery(this).data('field');
+
+                cloudinary.openMediaLibrary({ 
+                    cloud_name: 'dqwgxcnh7',
+                    multiple: false,
+                    api_key: '486491292758638' },
+                    {
+                        insertHandler: (data) => {
+                            const url = data.assets[0].secure_url;
+                            jQuery(`input[name="${field}"]`).val(url);
+                            jQuery(`img[data-field="${field}"]`).attr('src', url).removeClass('d-none');
+                        }
+                    }
+                );
+            });
         });
     </script>
 

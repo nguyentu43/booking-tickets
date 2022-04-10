@@ -1,6 +1,8 @@
 ﻿using BookingTickets.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using System.Collections.Generic;
 
 namespace BookingTickets.Data
 {
