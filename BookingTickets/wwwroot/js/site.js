@@ -2,7 +2,6 @@
 
     let room = null;
     let movieId = jQuery("input[name='movieId']").val();
-    let screeningDate = jQuery("input[name='screeningDate']").val();
     let selectedScreening = null;
     const selectedSeats = [];
 
@@ -88,7 +87,14 @@
         }
     });
 
-    jQuery("input[name='screeningDate']").datetimepicker({ timepicker: false, format: 'm/d/Y' });
+
+    jQuery(".calendar-container").calendar({
+        date: new Date(),
+        onClickDate: (date) => {
+            jQuery(".calendar-container").updateCalendarOptions({date})
+        }
+    });
+
     jQuery("select[name='roomId']").change(function () {
         let option = jQuery(this).find("option:selected");
         let i = option.val();
@@ -101,10 +107,6 @@
         }
     });
 
-    jQuery("input[name='screeningDate']").change(function () {
-        screeningDate = jQuery(this).val();
-    });
-
     jQuery("#btnSearchScreening").click(function () {
         if (room === null) {
             alert('Choose a room');
@@ -112,7 +114,8 @@
         }
         var container = jQuery("#screening-list");
         container.html('');
-        jQuery.getJSON(`${baseUrl}/ajax/getScreenings?movieId=${movieId}&roomId=${room.id}&screeningDate=${screeningDate}`)
+        let screeningDate = jQuery(".calendar-container").calendar().getSelectedDate();
+        jQuery.getJSON(`${baseUrl}/ajax/getScreenings?movieId=${movieId}&roomId=${room.id}&screeningDate=${moment(screeningDate).format("MM/DD/YYYY")}`)
             .done(function (data) {
                 if (data.length === 0) {
                     container.append("<div class='text-center'>Screening data not found. Try another day</div>")

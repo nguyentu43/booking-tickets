@@ -20,17 +20,22 @@
     <link rel="stylesheet" href="~/lib/bootswatch/bootstrap.min.css" />
     <link rel="stylesheet" href="~/lib/summernote/summernote-bs4.min.css"/>
     <link rel="stylesheet" href="~/lib/jquery-datetimepicker/jquery.datetimepicker.min.css" />
+    <link rel="stylesheet" href="~/lib/powerful-calendar/style.css" />
+    <link rel="stylesheet" href="~/lib/powerful-calendar/theme.css"/>
     @await RenderSectionAsync("Styles", required: false)
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-xl navbar-toggleable-xl navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-lg navbar-toggleable-lg navbar-dark bg-dark box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                <div>
+<a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
                     BookingTickets
                 </a>
                 <a class="btn btn-info" asp-controller="Home" asp-action="Search">Search Movie</a>
+                </div>
+                
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -44,11 +49,11 @@
                         @if (user == null)
                         {
                             <li class="nav-item">
-                                <a class="btn btn-primary mt-2 mr-2 mt-md-0" asp-controller="Auth" asp-action="Login">Login</a>
+                                <a class="btn btn-primary mt-2 mr-2 mt-lg-0" asp-controller="Auth" asp-action="Login">Login</a>
 
                             </li>
                             <li class="nav-item">
-                                <a class="btn btn-success mt-2 mt-md-0" asp-controller="Auth" asp-action="Register">Register</a>
+                                <a class="btn btn-success mt-2 mt-lg-0" asp-controller="Auth" asp-action="Register">Register</a>
                             </li>
                         }
                         else
@@ -58,16 +63,16 @@
                                 if (await UserManager.IsInRoleAsync(user, BookingTickets.Constants.Role.Admin.ToString()))
                                 {
                                     <li class="nav-item">
-                                        <a class="btn btn-outline-success mt-2 mr-2 mt-md-0" href="~/Admin">Manage</a>
+                                        <a class="btn btn-outline-success mt-2 mr-2 mt-lg-0" href="~/Admin">Manage</a>
                                     </li>
                                 }
                             }
 
                             <li class="nav-item">
-                                <a class="btn btn-outline-secondary mt-2 mr-2 mt-md-0" href="#">Hello, @user.Name</a>
+                                <a class="btn btn-secondary mt-2 mr-2 mt-lg-0" href="#">Hello, @user.Name</a>
                             </li>
                             <li class="nav-item">
-                                <a class="btn btn-danger mt-2 mt-md-0" asp-controller="Auth" asp-action="Logout">Logout</a>
+                                <a class="btn btn-danger mt-2 mt-lg-0" asp-controller="Auth" asp-action="Logout">Logout</a>
                             </li>
                         }
 
@@ -132,6 +137,7 @@
     <script src="~/lib/jquery.steps/jquery.steps.min.js"></script>
     <script src="~/lib/moment.js/moment.min.js"></script>
     <script src="~/lib/inputmask/jquery.inputmask.bundle.min.js"></script>
+    <script src="~/lib/powerful-calendar/calendar.min.js"></script>
     <script>
         var baseUrl = "@Configuration["BaseUrl"]";
     </script>

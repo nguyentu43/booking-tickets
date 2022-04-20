@@ -167,7 +167,7 @@ body {
 }
 
 #seat-list .seat-list__item.seat-list__item--selected{
-    border: 1px solid black;
+    border: 1px solid white;
 }
 
 .landscape-cover{
@@ -176,6 +176,7 @@ body {
     right: 10px;
     opacity: 0.5;
     top: 80px;
+    z-index: -99;
 }
 
 .landscape-cover img{
