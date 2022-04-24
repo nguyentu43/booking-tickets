@@ -6,5 +6,6 @@ namespace BookingTickets.Models.ViewModels
     {
         public Movie Movie { get; set; }
         public List<Room> Rooms { get; set; }
+        public List<Rate> Rates { get; set; }
     }
 }

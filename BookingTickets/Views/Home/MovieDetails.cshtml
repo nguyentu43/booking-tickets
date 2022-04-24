@@ -18,6 +18,12 @@
     </div>
     <div class="col-sm">
         <div class="h1">@Model.Movie.Title</div>
+        @if (Model.Rates.Count > 0)
+        {
+            var avg = Math.Round(Model.Rates.Average(r => r.Value), 1);
+            <h2 class="m-0">@avg <span class="fa fa-star text-warning"></span></h2>
+
+        }
         <div>
             Genres:
             @foreach (var genre in Model.Movie.Genres)
@@ -157,3 +163,40 @@
         </section>
     </div>
 </div>
+
+<div class="card mb-3">
+    <div class="card-header bg-info text-white">Rates</div>
+    <div class="card-body">
+        <div class="container-fluid rate-list">
+        @foreach(var rate in Model.Rates)
+        {
+             <div class="row border-bottom mb-1">
+                <div class="col-12 col-md-2 text-center">
+                    <img src="https://robohash.org/@(rate.Reservation.Customer.Name).png?set=set4&size=80x80" /><br/>
+                    <h4><span class="badge badge-primary">@rate.Reservation.Customer.Name</span></h4>
+                </div>
+                <div class="col-12 col-md-10 mb-1">
+                    <div class="moment-time" data-value="@rate.RatedDate"></div>
+                    <div class="starrr starrr-readonly" data-value="@rate.Value"></div>
+                    <div>@rate.Content</div>
+                </div>
+            </div>
+            @section Styles{
+                <link rel="stylesheet" href="~/lib/jquery-paginate/jquery.paginate.css" />
+            }
+
+            @section Scripts{
+                <script src="~/lib/jquery-paginate/jquery.paginate.js"></script>
+                <script>
+                    jQuery('.rate-list').paginate({'perPage': 20});
+                </script>
+            }
+        }
+        </div>
+        @if(Model.Rates.Count == 0)
+        {
+            <div>Dont have any rates</div>
+        }
+    </div>
+</div>
+

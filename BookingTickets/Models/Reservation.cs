@@ -24,5 +24,6 @@ namespace BookingTickets.Models
         [Required]
         public double Price { get; set; } = 0;
         public DateTime ReservationDate { get; set; }
+        public Rate Rate { get; set; }
     }
 }

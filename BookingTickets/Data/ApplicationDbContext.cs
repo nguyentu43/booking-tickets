@@ -35,6 +35,8 @@ namespace BookingTickets.Data
                     rs => rs.HasOne(rs => rs.Seat).WithMany().HasForeignKey(rs => rs.SeatId).OnDelete(DeleteBehavior.NoAction),
                     rs => rs.HasOne(rs => rs.Reservation).WithMany().HasForeignKey(rs => rs.ReservationId)
                 );
+
+            
         }
     }
 }

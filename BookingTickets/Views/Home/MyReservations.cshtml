@@ -23,11 +23,30 @@
 </div>
 }
 
-@foreach (var id in Model)
+@if(Model.Count > 0)
 {
-    @await Component.InvokeAsync("DetailsReservation", new { id = id });
+    <div class="reservation">
+    @foreach (var id in Model)
+    {
+        @await Component.InvokeAsync("DetailsReservation", new { id = id });
+    }
+    </div>
+    @section Styles{
+        <link rel="stylesheet" href="~/lib/jquery-paginate/jquery.paginate.css" />
+    }
+
+    @section Scripts{
+        <script src="~/lib/jquery-paginate/jquery.paginate.js"></script>
+        <script>
+            jQuery('.reservation').paginate({'perPage': 10});
+        </script>
+    }
 }
+
 
 @if(Model.Count == 0 && string.IsNullOrEmpty(phone)) { 
     <h5>Reservation is empty</h5>
 }
+
+
+

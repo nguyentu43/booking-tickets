@@ -13,7 +13,7 @@
             switch (currentIndex) {
                 case 0:
                     if (!selectedScreening) {
-                        alert('Must choose a screening');
+                        swal('Must choose a screening', '', 'error');
                         return false;
                     }
                     jQuery.getJSON(`${baseUrl}/ajax/getAvailableSeats?screeningId=${selectedScreening.data('id')}`)
@@ -61,7 +61,7 @@
                         selectedSeats.push({ text: item.text(), id: item.data('id'), type: item.data('type') });
                     });
                     if (selectedSeats.length === 0) {
-                        alert('Must choose a seat');
+                        swal('Must choose a seat', '', 'error');
                         return false;
                     }
                     let totalElem = jQuery('#price-total');
@@ -109,7 +109,7 @@
 
     jQuery("#btnSearchScreening").click(function () {
         if (room === null) {
-            alert('Choose a room');
+            swal('Choose a room', '', 'error');
             return;
         }
         var container = jQuery("#screening-list");
@@ -152,6 +152,7 @@
         reservation["Seats"] = selectedSeats.map(i => i.id);
         reservation["CardDate"] = moment(reservation["CardDate"]).format("MM/DD/YYYY");
 
+        swal('Waiting for booking...', '', 'info');
         jQuery.ajax({
             url: `${baseUrl}/ajax/booking`,
             data: JSON.stringify(reservation),
@@ -161,10 +162,10 @@
             method: "post"
         }).done(function (res) {
             if (res.error) {
-                alert(res.error);
+                swal(res.error, '', 'error');
             }
             else {
-                alert(res.message);
+                swal('Saved!', '', 'success');
                 window.location.href = baseUrl;
             }
         });
@@ -214,4 +215,49 @@
     jQuery("input[name='CardNumber']").inputmask("9999 9999 9999 9999");
     jQuery("input[name='Cvc']").inputmask("999");
     jQuery("input[name='Phone']").inputmask("9{10,15}");
+
+    jQuery('.starrr.starrr-readonly').each(function () {
+        jQuery(this).starrr({
+            readOnly: true,
+            rating: jQuery(this).data('value')
+        });
+    });
+
+    jQuery('.starrr').starrr();
+
+    jQuery('.starrr').on('starrr:change', function (e, value) {
+        jQuery(this).next().val(value);
+    });
+
+    jQuery('.moment-time').each(function () {
+        jQuery(this).text(moment(jQuery(this).data('value')).fromNow());
+    });
+
+    jQuery('.form-rate').submit(function (e) {
+        e.preventDefault();
+        let form = jQuery(this);
+        let rate = {};
+        for (let item of jQuery(this).serializeArray()) {
+            rate[item.name] = item.value;
+        }
+
+        swal('Waiting for submit...', '', 'info');
+
+        jQuery.ajax({
+            url: `${baseUrl}/ajax/rate`,
+            method: 'post',
+            data: JSON.stringify(rate),
+            headers: {
+                "Content-type": "application/json"
+            },
+        }).done(function (res) {
+            if (res.error) {
+                swal(res.error, '', 'error');
+            }
+            else {
+                swal('Rate saved. Thanks!', '', 'success');
+                form.parent().html("You have rated");
+            }
+        });
+    });
 });

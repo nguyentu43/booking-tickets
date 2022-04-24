@@ -14,6 +14,7 @@ namespace BookingTickets.Data.Base
         IReservationRepository ReservationRepository { get; }
         IReservationSeatRepository ReservationSeatRepository { get; }
         IUserRepository UserRepository { get; }
+        IRateRepository RateRepository { get; }
         Task<int> SaveChangeAsync();
     }
 }

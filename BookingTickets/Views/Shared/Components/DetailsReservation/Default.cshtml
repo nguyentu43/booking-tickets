@@ -36,4 +36,29 @@
         </div>
     </div>
 
+    <div class="card mt-3">
+        <div class="card-header">
+            Rate
+        </div>
+        <div class="card-body">
+            @if(Model.Reservation.Rate == null)
+            {
+                <form class="form-rate">
+                    <div class="form-group">
+                        <label>Comment</label>
+                        <textarea class="form-control" name="Content"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Rate</label><br/>
+                        <div class="starrr"></div>
+                        <input type="hidden" name="Value" value="0"/>
+                    </div>
+                    <input type="hidden" name="ReservationId" value="@Model.Reservation.Id" />
+                    <button class="btn btn-primary" type="submit">Submit</button>
+                </form>
+            }else{
+                <div>You have rated</div>
+            }
+        </div>
+    </div>
 </div>

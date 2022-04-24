@@ -1,4 +1,5 @@
-﻿using BookingTickets.Data.Base;
+﻿using AutoMapper;
+using BookingTickets.Data.Base;
 using BookingTickets.Models;
 using BookingTickets.Models.ViewModels;
 using LinqKit;
@@ -9,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Stripe;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -20,12 +22,13 @@ namespace BookingTickets.Controllers
         private readonly IUnitOfWork _unitOfWork;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IConfiguration _configuration;
-
-        public HomeController(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager, IConfiguration configuration)
+        private readonly IMapper _mapper;
+        public HomeController(IMapper mapper, IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager, IConfiguration configuration)
         {
             _unitOfWork = unitOfWork;
             _userManager = userManager;
             _configuration = configuration;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -89,21 +92,23 @@ namespace BookingTickets.Controllers
         {
             var movie = await _unitOfWork.MovieRepository.GetById(id);
             var rooms = await _unitOfWork.RoomRepository.GetAllWithCinema().ToListAsync();
-            return View(new MovieDetailVM { Movie = movie, Rooms = rooms });
+            var rates = await _unitOfWork.RateRepository.DbSet.Include(r => r.Reservation).ThenInclude(r => r.Customer).Where(r => r.Reservation.Screening.MovieId == id).ToListAsync();
+            return View(new MovieDetailVM { Movie = movie, Rooms = rooms, Rates = rates });
         }
 
         public async Task<IActionResult> MyReservations(string phone)
         {
-            List<int> reservations = null;
+            Func<Reservation, bool> query = null;
             if (!User.Identity.IsAuthenticated)
             {
-                reservations = await _unitOfWork.ReservationRepository.DbSet.Where(r => r.Phone == phone).Select(r => r.Id).ToListAsync();
+                query = (r => r.Phone == phone);
             }
             else
             {
                 var user = await _userManager.FindByNameAsync(User.Identity.Name);
-                reservations = await _unitOfWork.ReservationRepository.DbSet.Where(r => r.CustomerId == user.Id).Select(r => r.Id).ToListAsync();
+                query = r => r.CustomerId == user.Id;
             }
+            List<int> reservations = _unitOfWork.ReservationRepository.DbSet.Where(query).Select(r => r.Id).ToList();
             return View(reservations);
         }
 
@@ -151,6 +156,11 @@ namespace BookingTickets.Controllers
         [HttpPost("/ajax/booking")]
         public async Task<IActionResult> BookingTicket([FromBody] ReservationFormVM form)
         {
+            if (!ModelState.IsValid)
+            {
+                return Ok(new { error = string.Join("\n", ModelState.Values.SelectMany(v => v.Errors).Select(err => err.ErrorMessage).ToList()) });
+            }
+
             var screening = await _unitOfWork.ScreeningRepository.DbSet.Where(sc => sc.Id == form.ScreeningId).SingleOrDefaultAsync();
             var seats = await _unitOfWork.SeatRepository.DbSet.Where(s => form.Seats.Contains(s.Id)).ToListAsync();
 
@@ -247,6 +257,25 @@ namespace BookingTickets.Controllers
             }
 
             return Ok(new { message = "Booking ticket successful" });
+        }
+
+        [HttpPost("/ajax/rate")]
+        public async Task<IActionResult> SaveRate([FromBody] RateFormVM rate)
+        {
+            if (!ModelState.IsValid)
+            {
+                return Ok(new { error = string.Join("\n", ModelState.Values.SelectMany(v => v.Errors).Select(err => err.ErrorMessage).ToList()) });
+            }
+
+            try
+            {
+                _unitOfWork.RateRepository.Add(_mapper.Map(rate, new Rate { RatedDate = DateTime.Now }));
+                await _unitOfWork.SaveChangeAsync();
+                return Ok(new { message = "Rate saved" });
+            }catch(Exception)
+            {
+                return Ok(new { error = "Error add rate" });
+            }
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

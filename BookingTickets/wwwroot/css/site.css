@@ -242,7 +242,8 @@ body {
 
 /* movie-list */
 .movie-list.movie-list--land .movie-list__header, .movie-list.movie-list--land .movie-list__item {
-    flex: 0 0 270px;
+    flex: 0 0 250px;
+    width: 250px;
     height: 160px;
     margin-right: 10px;
 }
@@ -274,10 +275,10 @@ body {
 
     @media screen and (max-width: 480px) {
         .movie-list.movie-list--land .movie-list__header, .movie-list.movie-list--land .movie-list__item {
-        flex: 0 0 150px;
-        max-width: 150px;
-        height: 100px;
-    }
+            flex: 0 0 150px;
+            width: 150px;
+            height: 100px;
+        }
 
     .movie-list.movie-list--land .movie-list__header h2 {
         font-size: 20px;
@@ -305,6 +306,10 @@ body {
     .category-list div{
         flex: 0 0 150px;
     }
+}
+
+.starrr a {
+    color: #ffc107;
 }
 
 /*admin*/

@@ -17,6 +17,7 @@ namespace BookingTickets.Data
         public IReservationRepository ReservationRepository { get; private set; }
         public IReservationSeatRepository ReservationSeatRepository { get; private set; }
         public IUserRepository UserRepository { get; private set; }
+        public IRateRepository RateRepository { get; private set; }
         public UnitOfWork(ApplicationDbContext dbContext, IMapper _mapper)
         {
             _dbContext = dbContext;
@@ -30,6 +31,7 @@ namespace BookingTickets.Data
             ReservationRepository = new ReservationRepository(_dbContext, _mapper);
             ReservationSeatRepository = new ReservationSeatRepository(_dbContext, _mapper);
             UserRepository = new UserRepository(_dbContext, _mapper);
+            RateRepository = new RateRepository(_dbContext, _mapper);
         }
 
         public async Task<int> SaveChangeAsync()

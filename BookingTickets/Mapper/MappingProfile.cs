@@ -27,6 +27,7 @@ namespace BookingTickets.Mapper
             CreateMap<AddUserVM, ApplicationUser>();
             CreateMap<ApplicationUser, UpdateUserVM>();
             CreateMap<UpdateUserVM, ApplicationUser>();
+            CreateMap<RateFormVM, Rate>();
         }
     }
 }

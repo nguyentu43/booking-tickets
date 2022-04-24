@@ -17,7 +17,7 @@ namespace BookingTickets.Components
         public async Task<IViewComponentResult> InvokeAsync(int id)
         {
             var reservation = await _unitOfWork.ReservationRepository.DbSet
-                .Include(r => r.Screening)
+                .Include(r => r.Rate).Include(r => r.Screening)
                 .ThenInclude(r => r.Movie)
                 .SingleOrDefaultAsync(r => r.Id == id);
             var reservationSeats = await _unitOfWork.ReservationSeatRepository
