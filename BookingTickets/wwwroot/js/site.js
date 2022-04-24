@@ -197,6 +197,15 @@
                         autoplay: true,
                         centerMode: false
                     }
+                },
+                {
+                    breakpoint: 350,
+                    settings: {
+                        slidesToShow: 2,
+                        infinite: true,
+                        autoplay: true,
+                        centerMode: false
+                    }
                 }
             ]
         });
