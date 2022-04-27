@@ -4,6 +4,7 @@
     let movieId = jQuery("input[name='movieId']").val();
     let selectedScreening = null;
     const selectedSeats = [];
+    let captcha = null;
 
     jQuery("#booking-ticket").steps({
         headerTag: "h3",
@@ -76,11 +77,17 @@
                                 <div class="rounded text-white p-2 ${seat.type === 'VIP' ? 'bg-success' : 'bg-primary'}">
                                     ${seat.text}<br/>
                                     ${seat.type}<br/>
-                                    ${seatPrice.toPrecision(3)}$
+                                    ${seatPrice.toPrecision(2)}$
                                 </div>
                             </div>`);
                     }
-                    totalElem.text('Total: ' + total.toPrecision(3) + '$');
+                    totalElem.text('Total: ' + total.toPrecision(2) + '$');
+
+                    captcha = jQuery('#botdetect-captcha').captcha({
+                        captchaEndpoint:
+                            baseUrl + '/simple-captcha-endpoint.ashx'
+                    });
+
                     return true;
                 default: return true;
             }
@@ -118,11 +125,11 @@
         jQuery.getJSON(`${baseUrl}/ajax/getScreenings?movieId=${movieId}&roomId=${room.id}&screeningDate=${moment(screeningDate).format("MM/DD/YYYY")}`)
             .done(function (data) {
                 if (data.length === 0) {
-                    container.append("<div class='text-center'>Screening data not found. Try another day</div>")
+                    container.append("<div class='text-center mx-3'>Screening data not found. Try another day</div>")
                     return;
                 }
                 for (let item of data) {
-                    container.append(`<div class="col-12 col-sm-6 col-md-4 mt-3">
+                    container.append(`<div class="col-12 col-sm-6 col-md-4 mb-1">
                             <div class="p-2 border rounded screening-list__item" data-id="${item.id}" data-price="${item.price}">
                                     <span class="badge badge-secondary">${item.format}</span>
                                     <h3>${item.price}$</h3>
@@ -152,6 +159,10 @@
         reservation["Seats"] = selectedSeats.map(i => i.id);
         reservation["CardDate"] = moment(reservation["CardDate"]).format("MM/DD/YYYY");
 
+        reservation["Captcha"] = captcha.getUserEnteredCaptchaCode();
+        reservation["CaptchaId"] = captcha.getCaptchaId();
+
+
         swal('Waiting for booking...', '', 'info');
         jQuery.ajax({
             url: `${baseUrl}/ajax/booking`,
@@ -163,6 +174,7 @@
         }).done(function (res) {
             if (res.error) {
                 swal(res.error, '', 'error');
+                captcha.reloadImage();
             }
             else {
                 swal('Saved!', '', 'success');
@@ -260,4 +272,6 @@
             }
         });
     });
+
+    
 });

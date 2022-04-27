@@ -34,6 +34,13 @@ namespace BookingTickets.Models.ViewModels
         public int ScreeningId { get; set; }
         [Required]
         [JsonRequired]
+        public string CaptchaId { get; set; }
+        [Required]
+        [JsonRequired]
+        public string Captcha { get; set; }
+
+        [Required]
+        [JsonRequired]
         public List<int> Seats { get; set; }
     }
 }

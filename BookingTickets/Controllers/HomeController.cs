@@ -2,6 +2,7 @@
 using BookingTickets.Data.Base;
 using BookingTickets.Models;
 using BookingTickets.Models.ViewModels;
+using BotDetect.Web;
 using LinqKit;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +11,6 @@ using Microsoft.Extensions.Configuration;
 using Stripe;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -156,6 +156,14 @@ namespace BookingTickets.Controllers
         [HttpPost("/ajax/booking")]
         public async Task<IActionResult> BookingTicket([FromBody] ReservationFormVM form)
         {
+            SimpleCaptcha captcha = new SimpleCaptcha();
+            bool isHuman = captcha.Validate(form.Captcha, form.CaptchaId);
+
+            if (isHuman == false)
+            {
+                return Ok(new { error = "Captcha invalid" });
+            }
+
             if (!ModelState.IsValid)
             {
                 return Ok(new { error = string.Join("\n", ModelState.Values.SelectMany(v => v.Errors).Select(err => err.ErrorMessage).ToList()) });

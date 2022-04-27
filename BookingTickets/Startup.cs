@@ -4,6 +4,7 @@ using BookingTickets.Data;
 using BookingTickets.Data.Base;
 using BookingTickets.Mapper;
 using BookingTickets.Models;
+using BotDetect.Web;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -27,6 +28,14 @@ namespace BookingTickets
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<IISServerOptions>(options =>
+            {
+                options.AllowSynchronousIO = true;
+            });
+
+            services.AddMemoryCache();
+            services.AddMvc();
+
             services.AddControllersWithViews().AddNewtonsoftJson(options =>
             {
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -68,6 +77,8 @@ namespace BookingTickets
 
             var mapperConfig = new MapperConfiguration(mc => mc.AddProfile(new MappingProfile()));
             services.AddSingleton(mapperConfig.CreateMapper());
+
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -82,12 +93,13 @@ namespace BookingTickets
                 app.UseExceptionHandler("/Home/Error");
             }
             app.UseStaticFiles();
-
             app.UseRouting();
 
             app.UseAuthentication();
 
             app.UseAuthorization();
+            
+            app.UseSimpleCaptcha(Configuration.GetSection("BotDetect"));
 
             app.ApplicationServices.CreateScope().ServiceProvider.GetRequiredService<IDbInit>().GenerateInitData();
 

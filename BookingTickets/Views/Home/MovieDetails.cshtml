@@ -1,5 +1,6 @@
 ﻿@model BookingTickets.Models.ViewModels.MovieDetailVM
 @inject Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> UserManager
+
 @{
     ViewContext.HttpContext.Items["Title"] = Model.Movie.Title;
     var hasLandscape = Model.Movie.LandscapeCover != null;
@@ -96,9 +97,7 @@
                 <input name="movieId" type="hidden" value="@ViewContext.RouteData.Values["id"]" />
                 <button id="btnSearchScreening" class="btn btn-primary mt-3">Search</button>
             </div>
-            <div class="container-fluid">
-                <div id="screening-list" class="row">
-                </div>
+            <div id="screening-list" class="row">
             </div>
         </section>
         <h3>Choose Some Seat</h3>
@@ -156,6 +155,10 @@
                         <input class="form-control" name="Cvc" required placeholder="CVC" />
                     </div>
                 </div>
+                <div class="form-group">
+                    <div id="botdetect-captcha" data-captchastylename="CaptchaStyle"></div>
+                    <input class="form-control" required placeholder="Enter captcha" id="Captcha" type="text"/>
+                </div>
                 <button type="submit" id="btnBooking" class="btn btn-danger">Booking@(user == null ? " without Login" : "" )</button>
                 @if (user == null)
                 {<a asp-controller="Auth" asp-action="Login" class="btn btn-primary">Login</a>}
@@ -187,8 +190,12 @@
 
             @section Scripts{
                 <script src="~/lib/jquery-paginate/jquery.paginate.js"></script>
+                <script src="~/lib/jquery-captcha/jquery-captcha.min.js"></script>
                 <script>
-                    jQuery('.rate-list').paginate({'perPage': 20});
+                    jQuery().ready(function(){
+                        jQuery('.rate-list').paginate({'perPage': 20});
+                    });
+                    
                 </script>
             }
         }
