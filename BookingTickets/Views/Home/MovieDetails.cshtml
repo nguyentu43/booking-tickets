@@ -31,16 +31,16 @@
                     {
                         var param = new Dictionary<string, string>();
                         param.Add("Form.SelectedGenre", genre.Id.ToString());
-                <span class="badge badge-success">
+                <span class="badge badge-primary">
                     <a asp-controller="Home" class="text-white" asp-action="Search" asp-all-route-data="param" >@genre.Name</a>
                 </span>
             }
         </div>
-        <div>Duration: <span class="badge badge-info">@Model.Movie.Duration mins</span></div>
+        <div>Duration: <span class="badge badge-primary">@Model.Movie.Duration mins</span></div>
         <div>Rated: <span class="badge badge-primary">@Model.Movie.Rated</span></div>
-        <div>Release Date: <span class="badge badge-dark">@Model.Movie.ReleaseDate.ToShortDateString()</span></div>
+        <div>Release Date: <span class="badge badge-primary">@Model.Movie.ReleaseDate.ToShortDateString()</span></div>
         <div>Director: 
-            <span class="badge badge-success">
+            <span class="badge badge-primary">
                 @{
                     var paramD = new Dictionary<string, string>();
                     paramD.Add("Form.Keyword", Model.Movie.Director);
@@ -50,11 +50,11 @@
         <div>Cast: @foreach (var cast in Model.Movie.Cast.Split(",").ToList()) {
             var param = new Dictionary<string, string>();
             param.Add("Form.Keyword", cast);
-            <span class="badge badge-info">
+            <span class="badge badge-primary">
                 <a asp-controller="Home" class="text-white" asp-action="Search" asp-all-route-data="param">@cast</a>
             </span>
         }</div>
-        <div>Language: <span class="badge badge-info">@Model.Movie.Language</span></div>
+        <div>Language: <span class="badge badge-primary">@Model.Movie.Language</span></div>
     </div>
     
 </div>
@@ -63,12 +63,14 @@
 {
     <div class="card mb-3">
         <div class="card-header bg-primary text-white">Trailer</div>
-        <div class="card-body d-flex">
-            <iframe
-            style="flex: 1; height: 400px"
-        src="@Model.Movie.Trailer" 
-        title="YouTube video player" frameborder="0" 
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <div class="card-body">
+            <div class="embed-responsive embed-responsive-16by9">
+                <iframe
+                class="embed-responsive-item"
+                src="@Model.Movie.Trailer" 
+                title="YouTube video player" frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
         </div>
     </div>
 }
@@ -81,7 +83,7 @@
 </div>
 
 <div class="card mb-3">
-    <div class="card-header bg-success text-white">Booking Ticket</div>
+    <div class="card-header bg-primary text-white">Booking Ticket</div>
     <div class="card-body" id="booking-ticket">
         <h3>Choose a Screening</h3>
         <section>
@@ -168,7 +170,7 @@
 </div>
 
 <div class="card mb-3">
-    <div class="card-header bg-info text-white">Rates</div>
+    <div class="card-header bg-primary text-white">Rates</div>
     <div class="card-body">
         <div class="container-fluid rate-list">
         @foreach(var rate in Model.Rates)

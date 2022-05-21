@@ -50,7 +50,7 @@
                 <button class="button-cloudinary-upload btn btn-primary mb-2" data-field="Movie.Cover" type="button">
                     Upload <label asp-for="Movie.Cover" class="mb-0"></label>
                 </button><br/>
-                    <img class="img-thumbnail w-25 @(Model.Movie.Cover == null ? "d-none" : "")" data-field="Movie.Cover" src="@Model.Movie.Cover" />
+                    <img class="img-thumbnail w-25 @(Model.Movie?.Cover == null ? "d-none" : "")" data-field="Movie.Cover" src="@Model.Movie?.Cover" />
                 <input type="hidden" asp-for="Movie.Cover" />
             </div>
 
@@ -59,14 +59,14 @@
                     Upload  <label asp-for="Movie.LandscapeCover" class="mb-0"></label>
                 </button>
                 <br/>
-               <img class="img-thumbnail w-50 @(Model.Movie.LandscapeCover == null ? "d-none" : "")" data-field="Movie.LandscapeCover" src="@Model.Movie.LandscapeCover" />
+               <img class="img-thumbnail w-50 @(Model.Movie?.LandscapeCover == null ? "d-none" : "")" data-field="Movie.LandscapeCover" src="@Model.Movie?.LandscapeCover" />
                 <input type="hidden" asp-for="Movie.LandscapeCover" />
             </div>
             <div class="form-group">
                 <label asp-for="Movie.Trailer"></label>
                 <input class="form-control" id="releaseDate" name="Movie.Trailer" value="@Model.Movie?.Trailer")" />
             </div>
-            @if(Model.Movie.Trailer != null){
+            @if(Model.Movie?.Trailer != null){
                 <iframe 
                  
                 src='@Model.Movie.Trailer' 
@@ -94,10 +94,16 @@
 
                 const field = jQuery(this).data('field');
 
-                cloudinary.openMediaLibrary({ 
-                    cloud_name: 'dqwgxcnh7',
-                    multiple: false,
-                    api_key: '486491292758638' },
+                cloudinary.openMediaLibrary(
+                    { 
+                        cloud_name: '@Model.configuration["Cloudinary:CloudName"]',
+                        multiple: false,
+                        api_key: '@Model.configuration["Cloudinary:ApiKey"]',
+                        username: '@Model.configuration["Cloudinary:Username"]',
+                        timestamp: '@Model.Timestamp',
+                        signature: '@Model.Signature',
+                        folder: {path: 'booking-tickets'}
+                    },
                     {
                         insertHandler: (data) => {
                             const url = data.assets[0].secure_url;

@@ -32,10 +32,10 @@
         <nav class="navbar navbar-expand-lg navbar-toggleable-lg navbar-dark bg-dark box-shadow mb-3">
             <div class="container">
                 <div>
-<a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                <a class="navbar-brand" asp-controller="Home" asp-action="Index">
                     BookingTickets
                 </a>
-                <a class="btn btn-info" asp-controller="Home" asp-action="Search">Search Movie</a>
+                <a class="btn border" asp-controller="Home" asp-action="Search">Search Movie</a>
                 </div>
                 
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -46,16 +46,16 @@
                 <div class="navbar-collapse collapse justify-content-between">
                     <ul class="navbar-nav flex-grow-1 ">
                         <li class="nav-item ml-xl-auto">
-                            <a class="btn btn-outline-info  mr-2" asp-controller="Home" asp-action="MyReservations">Find Reservations</a>
+                            <a class="btn border mr-2" asp-controller="Home" asp-action="MyReservations">Find Reservations</a>
                         </li>
                         @if (user == null)
                         {
                             <li class="nav-item">
-                                <a class="btn btn-primary mt-2 mr-2 mt-lg-0" asp-controller="Auth" asp-action="Login">Login</a>
+                                <a class="btn btn-outline-info mt-2 mr-2 mt-lg-0" asp-controller="Auth" asp-action="Login">Login</a>
 
                             </li>
                             <li class="nav-item">
-                                <a class="btn btn-success mt-2 mt-lg-0" asp-controller="Auth" asp-action="Register">Register</a>
+                                <a class="btn btn-outline-success mt-2 mt-lg-0" asp-controller="Auth" asp-action="Register">Register</a>
                             </li>
                         }
                         else
@@ -71,10 +71,10 @@
                             }
 
                             <li class="nav-item">
-                                <a class="btn btn-secondary mt-2 mr-2 mt-lg-0" href="#">Hello, @user.Name</a>
+                                <a class="btn btn-outline-info mt-2 mr-2 mt-lg-0" href="#">Hello, @user.Name</a>
                             </li>
                             <li class="nav-item">
-                                <a class="btn btn-danger mt-2 mt-lg-0" asp-controller="Auth" asp-action="Logout">Logout</a>
+                                <a class="btn btn-outline-danger mt-2 mt-lg-0" asp-controller="Auth" asp-action="Logout">Logout</a>
                             </li>
                         }
 

@@ -1,4 +1,4 @@
-# Simple Booking Ticket Film
+# Simple Booking Tickets
 * .NET 5 (MVC, RazorPage)
 * Admin Account: admin - Abcd@123
 * Demo: https://bsite.net/booking

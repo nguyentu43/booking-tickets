@@ -169,102 +169,106 @@ namespace BookingTickets.Controllers
                 return Ok(new { error = string.Join("\n", ModelState.Values.SelectMany(v => v.Errors).Select(err => err.ErrorMessage).ToList()) });
             }
 
-            var screening = await _unitOfWork.ScreeningRepository.DbSet.Where(sc => sc.Id == form.ScreeningId).SingleOrDefaultAsync();
-            var seats = await _unitOfWork.SeatRepository.DbSet.Where(s => form.Seats.Contains(s.Id)).ToListAsync();
+            return await _unitOfWork.RunTransaction(async () => {
+                var screening = await _unitOfWork.ScreeningRepository.DbSet.Where(sc => sc.Id == form.ScreeningId).SingleOrDefaultAsync();
+                var seats = await _unitOfWork.SeatRepository.DbSet.Where(s => form.Seats.Contains(s.Id)).ToListAsync();
 
-            if (screening.ScreeningStart < DateTime.Now)
-            {
-                return Ok(new { error = "Screening has been end" });
-            }
-
-            if (seats.Count != form.Seats.Count)
-            {
-                return Ok(new { error = "Seats not found" });
-            }
-
-            var reservation = new Reservation
-            {
-                Name = form.Name,
-                Email = form.Email,
-                Phone = form.Phone,
-                ScreeningId = form.ScreeningId,
-                ReservationDate = DateTime.Now,
-            };
-
-            if (User.Identity?.Name != null)
-            {
-                var user = await _userManager.FindByNameAsync(User.Identity?.Name);
-                reservation.CustomerId = user.Id;
-            }
-
-            var total = 0d;
-            var reservationSeats = new List<ReservationSeat>();
-            foreach (var seat in seats)
-            {
-                var rs = new ReservationSeat();
-                rs.SeatId = seat.Id;
-                rs.SeatName = seat.SeatType.ToString() + "-" + Convert.ToChar(seat.Row + 65).ToString() + seat.Column;
-                if (seat.SeatType == Constants.SeatType.VIP)
+                if (screening.ScreeningStart < DateTime.Now)
                 {
-                    total += screening.Price * 1.1d;
-                    rs.Price = screening.Price * 1.1d;
+                    return Ok(new { error = "Screening has been end" });
                 }
-                else if (seat.SeatType == Constants.SeatType.NORMAL)
+
+                if (seats.Count != form.Seats.Count)
                 {
-                    total += screening.Price;
-                    rs.Price = screening.Price;
+                    return Ok(new { error = "Seats not found" });
                 }
-                reservationSeats.Add(rs);
-            }
-            reservation.Price = total;
 
-            try
-            {
-                StripeConfiguration.ApiKey = _configuration["StripeApi:Sk"].ToString();
-
-                var tokenService = new TokenService();
-                var token = await tokenService.CreateAsync(new TokenCreateOptions
+                var reservation = new Reservation
                 {
-                    Card = new TokenCardOptions
-                    {
-                        Cvc = form.Cvc,
-                        Number = form.CardNumber,
-                        ExpMonth = form.CardDate.Month,
-                        ExpYear = form.CardDate.Year
-                    }
-                });
-
-                var charge = new ChargeCreateOptions
-                {
-                    Amount = Convert.ToInt32(total * 100),
-                    Currency = "usd",
-                    Source = token.Id
+                    Name = form.Name,
+                    Email = form.Email,
+                    Phone = form.Phone,
+                    ScreeningId = form.ScreeningId,
+                    ReservationDate = DateTime.Now,
                 };
 
-                var chargeService = new ChargeService();
-                await chargeService.CreateAsync(charge);
-
-                _unitOfWork.ReservationRepository.Add(reservation);
-                await _unitOfWork.SaveChangeAsync();
-
-                foreach (var rs in reservationSeats)
+                if (User.Identity?.Name != null)
                 {
-                    rs.ReservationId = reservation.Id;
-                    _unitOfWork.ReservationSeatRepository.Add(rs);
+                    var user = await _userManager.FindByNameAsync(User.Identity?.Name);
+                    reservation.CustomerId = user.Id;
                 }
 
-                await _unitOfWork.SaveChangeAsync();
-            }
-            catch (StripeException e)
-            {
-                return Ok(new { error = e.StripeError.Message });
-            }
-            catch (Exception)
-            {
-                return Ok(new { error = "Booking ticket has errors" });
-            }
+                var total = 0d;
+                var reservationSeats = new List<ReservationSeat>();
+                foreach (var seat in seats)
+                {
+                    var rs = new ReservationSeat();
+                    rs.SeatId = seat.Id;
+                    rs.SeatName = seat.SeatType.ToString() + "-" + Convert.ToChar(seat.Row + 65).ToString() + seat.Column;
+                    if (seat.SeatType == Constants.SeatType.VIP)
+                    {
+                        total += screening.Price * 1.1d;
+                        rs.Price = screening.Price * 1.1d;
+                    }
+                    else if (seat.SeatType == Constants.SeatType.NORMAL)
+                    {
+                        total += screening.Price;
+                        rs.Price = screening.Price;
+                    }
+                    reservationSeats.Add(rs);
+                }
+                reservation.Price = total;
 
-            return Ok(new { message = "Booking ticket successful" });
+                try
+                {
+                    StripeConfiguration.ApiKey = _configuration["StripeApi:Sk"].ToString();
+
+                    var tokenService = new TokenService();
+                    var token = await tokenService.CreateAsync(new TokenCreateOptions
+                    {
+                        Card = new TokenCardOptions
+                        {
+                            Cvc = form.Cvc,
+                            Number = form.CardNumber,
+                            ExpMonth = form.CardDate.Month,
+                            ExpYear = form.CardDate.Year
+                        }
+                    });
+
+                    var charge = new ChargeCreateOptions
+                    {
+                        Amount = Convert.ToInt32(total * 100),
+                        Currency = "usd",
+                        Source = token.Id
+                    };
+
+                    var chargeService = new ChargeService();
+                    await chargeService.CreateAsync(charge);
+
+                    _unitOfWork.ReservationRepository.Add(reservation);
+                    await _unitOfWork.SaveChangeAsync();
+
+                    foreach (var rs in reservationSeats)
+                    {
+                        rs.ReservationId = reservation.Id;
+                        _unitOfWork.ReservationSeatRepository.Add(rs);
+                    }
+
+                    await _unitOfWork.SaveChangeAsync();
+                }
+                catch (StripeException e)
+                {
+                    return Ok(new { error = e.StripeError.Message });
+                }
+                catch (Exception)
+                {
+                    return Ok(new { error = "Booking ticket has errors" });
+                }
+
+                return Ok(new { message = "Booking ticket successful" });
+            }, (_) => {
+                return Ok(new { error = "Booking ticket has errors" });
+            });
         }
 
         [HttpPost("/ajax/rate")]

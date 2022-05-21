@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Threading.Tasks;
 
 namespace BookingTickets.Data.Base
 {
@@ -16,5 +18,6 @@ namespace BookingTickets.Data.Base
         IUserRepository UserRepository { get; }
         IRateRepository RateRepository { get; }
         Task<int> SaveChangeAsync();
+        Task<IActionResult> RunTransaction(Func<Task<IActionResult>> action, Func<Exception, IActionResult> error);
     }
 }

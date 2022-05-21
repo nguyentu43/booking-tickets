@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using BookingTickets.Data.Base;
+using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 
 namespace BookingTickets.Data
@@ -37,6 +39,24 @@ namespace BookingTickets.Data
         public async Task<int> SaveChangeAsync()
         {
             return await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<IActionResult> RunTransaction(Func<Task<IActionResult>> action, Func<Exception, IActionResult> error)
+        {
+            using(var transaction = await _dbContext.Database.BeginTransactionAsync())
+            {
+                try
+                {
+                    var result = await action();
+                    await transaction.CommitAsync();
+                    return result;
+                }
+                catch(Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    return error(ex);
+                }
+            }
         }
     }
 }
